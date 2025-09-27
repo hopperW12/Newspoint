@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36518.9 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "newspoint.client", "newspoint.client\newspoint.client.esproj", "{63B27594-ACEF-2B26-3DC4-6916B9F7C16B}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Newspoint.Client", "Newspoint.Client\Newspoint.Client.esproj", "{63B27594-ACEF-2B26-3DC4-6916B9F7C16B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newspoint.Server", "Newspoint.Server\Newspoint.Server.csproj", "{84C4871B-7E4A-4A76-BBD1-FA56A3DCB236}"
 EndProject
