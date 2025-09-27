@@ -17,9 +17,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\newspoint.client\newspoint.client.esproj">
+    <ProjectReference Include="..\Newspoint.Client\Newspoint.Client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\Newspoint.Application\Newspoint.Application.csproj" />
+    <ProjectReference Include="..\Newspoint.Domain\Newspoint.Domain.csproj" />
+    <ProjectReference Include="..\Newspoint.Infrastructure\Newspoint.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
