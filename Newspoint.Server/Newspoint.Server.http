@@ -1,0 +1,6 @@
+@Newspoint.Server_HostAddress = http://localhost:5159
+
+GET {{Newspoint.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
