@@ -1,6 +1,6 @@
 ﻿namespace Newspoint.Domain.Entities;
 
-public class Comment
+public class Comment : IEntity
 {
     public int Id { get; set; }
     public string Content { get; set; }

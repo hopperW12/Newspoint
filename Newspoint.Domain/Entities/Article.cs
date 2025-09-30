@@ -1,6 +1,6 @@
 ﻿namespace Newspoint.Domain.Entities;
 
-public class Article
+public class Article : IEntity
 {
     public int Id { get; set; }
     public string Title { get; set; }
