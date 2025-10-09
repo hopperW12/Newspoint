@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newspoint.Application.Services;
 using Newspoint.Infrastructure.Database;
+using Newspoint.Infrastructure.Database.Seeders;
 
 namespace Newspoint.Server.Extensions;
 
@@ -17,6 +18,8 @@ public static class ServicesExtensions
                 serverVersion,
                 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
+        services.AddScoped<DatabaseSeeder>();
+        
         return services;
     }
 
