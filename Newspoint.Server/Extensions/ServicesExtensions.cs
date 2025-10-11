@@ -2,6 +2,7 @@
 using Newspoint.Application.Services;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
+using Newspoint.Infrastructure.Repositories;
 
 namespace Newspoint.Server.Extensions;
 
@@ -29,6 +30,18 @@ public static class ServicesExtensions
         {
             scan.FromAssembliesOf(typeof(IService))
                 .AddClasses(c => c.AssignableTo(typeof(IService)))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime();
+        });
+        return services;
+    }
+    
+    public static IServiceCollection AddRepositoriesFromAssembly(this IServiceCollection services)
+    {
+        services.Scan(scan =>
+        {
+            scan.FromAssembliesOf(typeof(IRepository))
+                .AddClasses(c => c.AssignableTo(typeof(IRepository)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime();
         });

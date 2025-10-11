@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Newspoint.Domain.Entities;
-using Newspoint.Infrastructure.Database;
+﻿using Newspoint.Domain.Entities;
+using Newspoint.Infrastructure.Repositories;
 
 namespace Newspoint.Application.Services;
 
@@ -10,16 +9,15 @@ public interface IArticleService : IService
 }
 public class ArticleService : IArticleService
 {
-    private readonly DataDbContext _dataDbContext;
-    
-    public ArticleService(DataDbContext dataDbContext)
+    private readonly IArticleRepository _articleRepository;
+
+    public ArticleService(IArticleRepository articleRepository)
     {
-        _dataDbContext = dataDbContext;
+        _articleRepository = articleRepository;
     }
 
-    public async Task<ICollection<Article>> GetAll()
+    public Task<ICollection<Article>> GetAll()
     {
-        var articles = _dataDbContext.Articles.ToListAsync();
-        return await articles;
+        return _articleRepository.GetAll(); 
     }
 }

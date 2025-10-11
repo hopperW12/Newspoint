@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Newspoint.Domain.Entities;
-using Newspoint.Infrastructure.Database;
+﻿using Newspoint.Domain.Entities;
+using Newspoint.Infrastructure.Repositories;
 
 namespace Newspoint.Application.Services;
 
@@ -11,16 +10,15 @@ public interface ICategoryService : IService
 
 public class CategoryService : ICategoryService
 {
-    private readonly DataDbContext _dataDbContext;
-    
-    public CategoryService(DataDbContext dataDbContext)
+    private readonly ICategoryRepository _categoryRepository;
+
+    public CategoryService(ICategoryRepository categoryRepository)
     {
-        _dataDbContext = dataDbContext;
+        _categoryRepository = categoryRepository;
     }
-    
-    public async Task<ICollection<Category>> GetAll()
+
+    public Task<ICollection<Category>> GetAll()
     {
-        var categories = _dataDbContext.Categories.ToListAsync();
-        return await categories;
+        return _categoryRepository.GetAll();
     }
 }
