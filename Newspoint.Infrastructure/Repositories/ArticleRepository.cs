@@ -20,7 +20,10 @@ public class ArticleRepository : IArticleRepository
 
     public async Task<ICollection<Article>> GetAll()
     {
-        var articles = _dataDbContext.Articles.ToListAsync();
+        var articles = _dataDbContext.Articles
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .ToListAsync();
         return await articles;
     }
 }

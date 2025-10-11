@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newspoint.Application.DTOs;
 using Newspoint.Application.Services;
-using Newspoint.Domain.Entities;
 
 namespace Newspoint.Server.Controllers;
 
@@ -16,7 +16,7 @@ public class ArticleController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IEnumerable<Article>> GetAll()
+    public async Task<IEnumerable<ArticleDto>> GetAll()
     {
         return await _articleService.GetAll();
     }

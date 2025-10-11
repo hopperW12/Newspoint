@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newspoint.Application.Mappers;
 using Newspoint.Application.Services;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
@@ -42,6 +43,18 @@ public static class ServicesExtensions
         {
             scan.FromAssembliesOf(typeof(IRepository))
                 .AddClasses(c => c.AssignableTo(typeof(IRepository)))
+                .AsImplementedInterfaces()
+                .WithScopedLifetime();
+        });
+        return services;
+    }
+    
+    public static IServiceCollection AddMappersFromAssembly(this IServiceCollection services)
+    {
+        services.Scan(scan =>
+        {
+            scan.FromAssembliesOf(typeof(IMapper<,>))
+                .AddClasses(c => c.AssignableTo(typeof(IMapper<,>)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime();
         });
