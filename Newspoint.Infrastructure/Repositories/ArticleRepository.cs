@@ -12,7 +12,7 @@ public interface IArticleRepository : IRepository
 public class ArticleRepository : IArticleRepository
 {
     private readonly DataDbContext _dataDbContext;
-    
+
     public ArticleRepository(DataDbContext dataDbContext)
     {
         _dataDbContext = dataDbContext;

@@ -21,7 +21,7 @@ public static class ServicesExtensions
                 o => o.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
         services.AddScoped<DatabaseSeeder>();
-        
+
         return services;
     }
 
@@ -36,7 +36,7 @@ public static class ServicesExtensions
         });
         return services;
     }
-    
+
     public static IServiceCollection AddRepositoriesFromAssembly(this IServiceCollection services)
     {
         services.Scan(scan =>
@@ -48,7 +48,7 @@ public static class ServicesExtensions
         });
         return services;
     }
-    
+
     public static IServiceCollection AddMappersFromAssembly(this IServiceCollection services)
     {
         services.Scan(scan =>

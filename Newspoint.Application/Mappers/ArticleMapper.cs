@@ -13,14 +13,14 @@ public class ArticleMapper : IMapper<Article, ArticleDto>
             Content = entity.Content,
             PublishedAt = entity.PublishedAt,
             Category = entity.Category.Name,
-            Author =  $"{entity.Author.FirstName} {entity.Author.LastName}"
+            Author = $"{entity.Author.FirstName} {entity.Author.LastName}"
         };
     }
 
     public Article MapBack(ArticleDto dto)
     {
         var names = dto.Author.Split(' ', 2);
-        
+
         return new Article
         {
             Title = dto.Title,

@@ -11,14 +11,14 @@ public static class WebApplicationExtensions
 
         var services = scope.ServiceProvider;
         var dbContext = services.GetRequiredService<DbContext>();
-        
+
         // Migrate database.
         await dbContext.Database.MigrateAsync();
-        
+
         // Seed database if enabled in configuration.
         var seeder = services.GetRequiredService<DatabaseSeeder>();
         var seedDb = app.Configuration.GetValue<bool>("Database:Seed");
-        
+
         if (app.Environment.IsDevelopment() && seedDb)
             await seeder.Seed();
     }

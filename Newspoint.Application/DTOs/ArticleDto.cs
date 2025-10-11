@@ -7,5 +7,5 @@ public class ArticleDto
     public DateTime PublishedAt { get; set; }
     public string Category { get; set; }
     public string Author { get; set; }
-    
+
 }

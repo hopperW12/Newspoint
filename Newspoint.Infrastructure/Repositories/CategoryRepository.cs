@@ -12,12 +12,12 @@ public interface ICategoryRepository : IRepository
 public class CategoryRepository : ICategoryRepository
 {
     private readonly DataDbContext _dataDbContext;
-    
+
     public CategoryRepository(DataDbContext dataDbContext)
     {
         _dataDbContext = dataDbContext;
     }
-    
+
     public async Task<ICollection<Category>> GetAll()
     {
         var categories = _dataDbContext.Categories.ToListAsync();
