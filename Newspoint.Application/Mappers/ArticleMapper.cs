@@ -15,7 +15,7 @@ public class ArticleMapper : IMapper<Article, ArticleDto>
             PublishedAt = entity.PublishedAt,
             CategoryId = entity.CategoryId,
             Category = entity.Category.Name,
-            AuthorId = entity.AuthorId, 
+            AuthorId = entity.AuthorId,
             Author = $"{entity.Author.FirstName} {entity.Author.LastName}"
         };
     }

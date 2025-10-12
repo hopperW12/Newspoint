@@ -46,7 +46,7 @@ public class ArticleService : IArticleService
         var article = await _articleRepository.GetById(id);
         if (article == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
-        
+
         var articleDto = _articleMapper.Map(article);
         if (article.Comments.Count <= 0)
             return Result<ArticleDto>.Ok(articleDto);
@@ -55,7 +55,7 @@ public class ArticleService : IArticleService
             .Select(comment => _commentMapper.Map(comment))
             .ToArray();
         articleDto.Comments = comments;
-        
+
         return Result<ArticleDto>.Ok(articleDto);
     }
 
@@ -67,25 +67,25 @@ public class ArticleService : IArticleService
         var category = await _categoryRepository.GetById(article.CategoryId);
         if (category == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.CategoryNotFound);
-        
+
         article.Category = category;
-        
+
         // Find author in DB
         var author = await _userRepository.GetById(article.AuthorId);
         if (author == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
-        
+
         // Check author permission
         if (author.Role == Role.Reader)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
-        
+
         article.Author = author;
-        
+
         // Add article to DB
         var result = await _articleRepository.Add(article);
         if (result == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleError);
-        
+
         return Result<ArticleDto>.Ok(_articleMapper.Map(result));
     }
 
@@ -95,21 +95,21 @@ public class ArticleService : IArticleService
         var category = await _categoryRepository.GetById(articleDto.CategoryId);
         if (category == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.CategoryNotFound);
-        
+
         // Update article in DB
         var article = await _articleRepository.GetById(articleDto.Id);
         if (article == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
-        
+
         article.Title = articleDto.Title;
         article.Content = articleDto.Content;
         article.CategoryId = category.Id;
         article.Category = category;
-        
+
         var result = await _articleRepository.Update(article);
         if (result == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleError);
-        
+
         return Result<ArticleDto>.Ok(_articleMapper.Map(result));
     }
 
@@ -118,7 +118,7 @@ public class ArticleService : IArticleService
         var result = await _articleRepository.Delete(id);
         if (!result)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
-        
+
         return Result.Ok();
     }
 }

@@ -18,7 +18,7 @@ public class ArticleController : ControllerBase
 
     [HttpGet]
     public async Task<IEnumerable<ArticleDto>> GetArticles()
-    {   
+    {
         return await _articleService.GetAll();
     }
 
@@ -29,14 +29,14 @@ public class ArticleController : ControllerBase
         return this.ToActionResult(result);
 
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddArticle([FromBody] ArticleDto article)
     {
         var result = await _articleService.Add(article);
         return this.ToActionResult(result);
     }
-    
+
     [HttpPut]
     public async Task<IActionResult> UpdateArticle([FromBody] ArticleDto article)
     {

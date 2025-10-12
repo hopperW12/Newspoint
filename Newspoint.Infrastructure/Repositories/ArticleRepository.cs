@@ -45,7 +45,7 @@ public class ArticleRepository : IArticleRepository
     {
         await _dataDbContext.Articles.AddAsync(entity);
         await _dataDbContext.SaveChangesAsync();
-        
+
         return entity;
     }
 
@@ -53,7 +53,7 @@ public class ArticleRepository : IArticleRepository
     {
         _dataDbContext.Articles.Update(entity);
         await _dataDbContext.SaveChangesAsync();
-        
+
         return entity;
     }
 
@@ -63,10 +63,10 @@ public class ArticleRepository : IArticleRepository
             .FirstOrDefaultAsync(e => e.Id == id);
         if (entity == null)
             return false;
-        
+
         _dataDbContext.Articles.Remove(entity);
         await _dataDbContext.SaveChangesAsync();
-        
+
         return true;
     }
 }

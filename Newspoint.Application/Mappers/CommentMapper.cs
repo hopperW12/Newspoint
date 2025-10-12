@@ -26,7 +26,7 @@ public class CommentMapper : IMapper<Comment, CommentDto>
             Author = new User
             {
                 FirstName = names[0],
-                LastName = names[1]           
+                LastName = names[1]
             }
         };
     }
