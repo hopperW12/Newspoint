@@ -36,6 +36,8 @@ public class ArticleRepository : IArticleRepository
         return _dataDbContext.Articles
             .Include(e => e.Author)
             .Include(e => e.Category)
+            .Include(e => e.Comments)
+                .ThenInclude(e => e.Author)
             .FirstOrDefaultAsync(e => e.Id == id);
     }
 

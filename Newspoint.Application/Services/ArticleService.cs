@@ -19,17 +19,20 @@ public class ArticleService : IArticleService
     private readonly IUserRepository _userRepository;
     private readonly IArticleRepository _articleRepository;
     private readonly IMapper<Article, ArticleDto> _articleMapper;
+    private readonly IMapper<Comment, CommentDto> _commentMapper;
 
     public ArticleService(
         ICategoryRepository categoryRepository,
         IUserRepository userRepository,
         IArticleRepository articleRepository,
-        IMapper<Article, ArticleDto> articleMapper)
+        IMapper<Article, ArticleDto> articleMapper,
+        IMapper<Comment, CommentDto> commentMapper)
     {
         _categoryRepository = categoryRepository;
         _userRepository = userRepository;
         _articleRepository = articleRepository;
         _articleMapper = articleMapper;
+        _commentMapper = commentMapper;
     }
 
     public async Task<ICollection<ArticleDto>> GetAll()
@@ -44,7 +47,16 @@ public class ArticleService : IArticleService
         if (article == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
         
-        return Result<ArticleDto>.Ok(_articleMapper.Map(article));
+        var articleDto = _articleMapper.Map(article);
+        if (article.Comments.Count <= 0)
+            return Result<ArticleDto>.Ok(articleDto);
+
+        var comments = article.Comments
+            .Select(comment => _commentMapper.Map(comment))
+            .ToArray();
+        articleDto.Comments = comments;
+        
+        return Result<ArticleDto>.Ok(articleDto);
     }
 
     public async Task<Result<ArticleDto>> Add(ArticleDto articleDto)
