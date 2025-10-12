@@ -5,7 +5,7 @@ using Newspoint.Application.Services;
 namespace Newspoint.Server.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryService _categoryService;
