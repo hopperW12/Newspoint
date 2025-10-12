@@ -9,10 +9,13 @@ public class ArticleMapper : IMapper<Article, ArticleDto>
     {
         return new ArticleDto
         {
+            Id = entity.Id,
             Title = entity.Title,
             Content = entity.Content,
             PublishedAt = entity.PublishedAt,
+            CategoryId = entity.CategoryId,
             Category = entity.Category.Name,
+            AuthorId = entity.AuthorId, 
             Author = $"{entity.Author.FirstName} {entity.Author.LastName}"
         };
     }
@@ -23,17 +26,22 @@ public class ArticleMapper : IMapper<Article, ArticleDto>
 
         return new Article
         {
+            Id = dto.Id,
             Title = dto.Title,
             Content = dto.Content,
             PublishedAt = dto.PublishedAt,
+            CategoryId = dto.CategoryId,
             Category = new Category
             {
+                Id = dto.CategoryId,
                 Name = dto.Category
             },
+            AuthorId = dto.AuthorId,
             Author = new User
             {
-                FirstName = names.FirstOrDefault() ?? "",
-                LastName = names.Skip(1).FirstOrDefault() ?? ""
+                Id = dto.AuthorId,
+                FirstName = names[0],
+                LastName = names[1]
             }
         };
     }

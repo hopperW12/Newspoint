@@ -7,6 +7,7 @@ namespace Newspoint.Infrastructure.Repositories;
 public interface ICategoryRepository : IRepository
 {
     Task<ICollection<Category>> GetAll();
+    Task<Category?> GetById(int id);
 }
 
 public class CategoryRepository : ICategoryRepository
@@ -22,5 +23,10 @@ public class CategoryRepository : ICategoryRepository
     {
         var categories = _dataDbContext.Categories.ToListAsync();
         return await categories;
+    }
+
+    public Task<Category?> GetById(int id)
+    {
+        return _dataDbContext.Categories.FirstOrDefaultAsync(e => e.Id == id);
     }
 }
