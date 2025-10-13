@@ -10,7 +10,7 @@ namespace Newspoint.Server.Controllers;
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
-    
+
     public CommentController(ICommentService commentService)
     {
         _commentService = commentService;
@@ -22,7 +22,7 @@ public class CommentController : ControllerBase
         var result = await _commentService.GetById(id);
         return this.ToActionResult(result);
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddComment([FromBody] CommentDto comment)
     {
@@ -36,7 +36,7 @@ public class CommentController : ControllerBase
         var result = await _commentService.Update(comment);
         return this.ToActionResult(result);
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteComment(int id)
     {

@@ -9,7 +9,7 @@ public static class ServiceMessages
     // Comment
     public const string CommentNotFound = "Tento komentář nebyl nalezen.";
     public const string CommentError = "Nastala chyba.";
-    
+
     // Category
     public const string CategoryNotFound = "Tato kategorie nebyla nalezena.";
 

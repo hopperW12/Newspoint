@@ -13,7 +13,7 @@ public static class ResultExtensions
         return result.ErrorType switch
         {
             ResultErrorType.NotFound => controller.NotFound(new Result { Success = result.Success, Message = result.Message }),
-            _ => controller.StatusCode(500, new Result{ Success = result.Success, Message = result.Message })
+            _ => controller.StatusCode(500, new Result { Success = result.Success, Message = result.Message })
         };
     }
 

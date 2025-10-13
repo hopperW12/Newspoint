@@ -10,7 +10,7 @@ public class ArticleControllerTests
 {
     private readonly Mock<IArticleService> _mockService;
     private readonly ArticleController _controller;
-    
+
     public ArticleControllerTests()
     {
         _mockService = new Mock<IArticleService>();
@@ -18,30 +18,30 @@ public class ArticleControllerTests
     }
 
     // Get Articles
-    
+
     [Fact]
     public async Task GetArticles()
     {
         _mockService.Setup(a => a.GetAll())
             .ReturnsAsync(new List<ArticleDto>());
-        
+
         var result = await _controller.GetArticles();
         Assert.IsAssignableFrom<IEnumerable<ArticleDto>>(result);
         _mockService.Verify(s => s.GetAll(), Times.Once);
     }
-    
+
     // Get Article By Id
-    
+
     [Fact]
     public async Task GetArticleById_When_ResultOk()
     {
         _mockService.Setup(a => a.GetByIdWithComments(1))
-            .ReturnsAsync(Result<ArticleDto>.Ok(new ArticleDto())); 
-        
+            .ReturnsAsync(Result<ArticleDto>.Ok(new ArticleDto()));
+
         var actionResult = await _controller.GetById(1);
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
         var result = Assert.IsType<Result<ArticleDto>>(okResult.Value);
-        
+
         Assert.True(result.Success);
         Assert.IsType<ArticleDto>(result.Data);
         _mockService.Verify(s => s.GetByIdWithComments(1), Times.Once);
@@ -52,11 +52,11 @@ public class ArticleControllerTests
     {
         _mockService.Setup(a => a.GetByIdWithComments(1))
             .ReturnsAsync(Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
-        
+
         var actionResult = await _controller.GetById(1);
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
         var result = Assert.IsType<Result<ArticleDto>>(notFoundResult.Value);
-        
+
         Assert.False(result.Success);
         _mockService.Verify(s => s.GetByIdWithComments(1), Times.Once);
     }
@@ -66,15 +66,15 @@ public class ArticleControllerTests
     {
         _mockService.Setup(a => a.GetByIdWithComments(1))
             .ReturnsAsync(Result<ArticleDto>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
-        
+
         var actionResult = await _controller.GetById(1);
         var objectResult = Assert.IsType<ObjectResult>(actionResult);
         Assert.Equal(500, objectResult.StatusCode);
         _mockService.Verify(s => s.GetByIdWithComments(1), Times.Once);
     }
-    
+
     // Add Article
-    
+
     [Fact]
     public async Task AddArticle_When_ReturnOk()
     {
@@ -85,12 +85,12 @@ public class ArticleControllerTests
         var actionResult = await _controller.AddArticle(dto);
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
         var result = Assert.IsType<Result<ArticleDto>>(okResult.Value);
-        
+
         Assert.True(result.Success);
         Assert.Equal(dto, result.Data);
         _mockService.Verify(s => s.Add(dto), Times.Once);
     }
-    
+
     [Fact]
     public async Task AddArticle_When_ReturnNotFound()
     {
@@ -101,11 +101,11 @@ public class ArticleControllerTests
         var actionResult = await _controller.AddArticle(dto);
         var notFoundObjectResult = Assert.IsType<NotFoundObjectResult>(actionResult);
         var result = Assert.IsType<Result<ArticleDto>>(notFoundObjectResult.Value);
-        
+
         Assert.False(result.Success);
         _mockService.Verify(s => s.Add(dto), Times.Once);
     }
-    
+
     [Fact]
     public async Task AddArticle_When_ReturnStatusCode()
     {
@@ -115,13 +115,13 @@ public class ArticleControllerTests
 
         var actionResult = await _controller.AddArticle(dto);
         var resultObject = Assert.IsType<ObjectResult>(actionResult);
-        
+
         Assert.Equal(500, resultObject.StatusCode);
         _mockService.Verify(s => s.Add(dto), Times.Once);
     }
 
     // Update Article
-    
+
     [Fact]
     public async Task UpdateArticle_When_ReturnOk()
     {
@@ -136,7 +136,7 @@ public class ArticleControllerTests
         Assert.True(result.Success);
         _mockService.Verify(s => s.Update(dto), Times.Once);
     }
-    
+
     [Fact]
     public async Task UpdateArticle_When_ReturnNotFound()
     {
@@ -151,7 +151,7 @@ public class ArticleControllerTests
         Assert.False(result.Success);
         _mockService.Verify(s => s.Update(dto), Times.Once);
     }
-    
+
     [Fact]
     public async Task UpdateArticle_When_ReturnStatusCode()
     {
@@ -161,13 +161,13 @@ public class ArticleControllerTests
 
         var actionResult = await _controller.UpdateArticle(dto);
         var objectResult = Assert.IsType<ObjectResult>(actionResult);
-        
+
         Assert.Equal(500, objectResult.StatusCode);
         _mockService.Verify(s => s.Update(dto), Times.Once);
     }
 
     // Delete Article
-    
+
     [Fact]
     public async Task DeleteArticle_When_ReturnOk()
     {
@@ -195,7 +195,7 @@ public class ArticleControllerTests
         Assert.False(result.Success);
         _mockService.Verify(s => s.Delete(11), Times.Once);
     }
-    
+
     [Fact]
     public async Task DeleteArticle_When_ReturnStatusCode()
     {
@@ -204,7 +204,7 @@ public class ArticleControllerTests
 
         var actionResult = await _controller.DeleteArticle(11);
         var objectResult = Assert.IsType<ObjectResult>(actionResult);
-        
+
         Assert.Equal(500, objectResult.StatusCode);
         _mockService.Verify(s => s.Delete(11), Times.Once);
     }
