@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newspoint.Domain", "Newspoi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newspoint.Application", "Newspoint.Application\Newspoint.Application.csproj", "{DF528968-5FD6-47A9-AAD0-6EC15A42B80C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Newspoint.Tests", "Newspoint.Tests\Newspoint.Tests.csproj", "{F82CB0E1-6224-4C66-8CE3-D386D9DF2481}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,10 @@ Global
 		{DF528968-5FD6-47A9-AAD0-6EC15A42B80C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF528968-5FD6-47A9-AAD0-6EC15A42B80C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF528968-5FD6-47A9-AAD0-6EC15A42B80C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F82CB0E1-6224-4C66-8CE3-D386D9DF2481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F82CB0E1-6224-4C66-8CE3-D386D9DF2481}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F82CB0E1-6224-4C66-8CE3-D386D9DF2481}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F82CB0E1-6224-4C66-8CE3-D386D9DF2481}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
