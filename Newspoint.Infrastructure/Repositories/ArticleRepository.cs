@@ -8,6 +8,7 @@ public interface IArticleRepository : IRepository
 {
     Task<ICollection<Article>> GetAll();
     Task<Article?> GetById(int id);
+    Task<Article?> GetByIdWithComments(int id);
     Task<Article?> Add(Article entity);
     Task<Article?> Update(Article entity);
     Task<bool> Delete(int id);
@@ -32,6 +33,14 @@ public class ArticleRepository : IArticleRepository
     }
 
     public Task<Article?> GetById(int id)
+    {
+        return _dataDbContext.Articles
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .FirstOrDefaultAsync(e => e.Id == id);
+    }
+
+    public Task<Article?> GetByIdWithComments(int id)
     {
         return _dataDbContext.Articles
             .Include(e => e.Author)

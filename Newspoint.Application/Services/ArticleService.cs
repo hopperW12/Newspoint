@@ -9,6 +9,7 @@ public interface IArticleService : IService
 {
     Task<ICollection<ArticleDto>> GetAll();
     Task<Result<ArticleDto>> GetById(int id);
+    Task<Result<ArticleDto>> GetByIdWithComments(int id);
     Task<Result<ArticleDto>> Add(ArticleDto articleDto);
     Task<Result<ArticleDto>> Update(ArticleDto articleDto);
     Task<Result> Delete(int id);
@@ -44,6 +45,15 @@ public class ArticleService : IArticleService
     public async Task<Result<ArticleDto>> GetById(int id)
     {
         var article = await _articleRepository.GetById(id);
+        if (article == null)
+            return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
+
+        return Result<ArticleDto>.Ok(_articleMapper.Map(article));
+    }
+
+    public async Task<Result<ArticleDto>> GetByIdWithComments(int id)
+    {
+        var article = await _articleRepository.GetByIdWithComments(id);
         if (article == null)
             return Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
 

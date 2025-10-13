@@ -25,7 +25,7 @@ public class ArticleController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id)
     {
-        var result = await _articleService.GetById(id);
+        var result = await _articleService.GetByIdWithComments(id);
         return this.ToActionResult(result);
 
     }
