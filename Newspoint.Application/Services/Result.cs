@@ -1,9 +1,12 @@
-﻿namespace Newspoint.Application.Services;
+﻿using System.Text.Json.Serialization;
+
+namespace Newspoint.Application.Services;
 
 public class Result
 {
     public bool Success { get; set; }
     public string? Message { get; set; }
+    [JsonIgnore]
     public ResultErrorType ErrorType { get; set; }
 
     public static Result Ok() => new() { Success = true };

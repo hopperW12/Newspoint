@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Newspoint.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +10,11 @@ builder.Services.AddRepositoriesFromAssembly();
 builder.Services.AddMappersFromAssembly();
 builder.Services.AddServicesFromAssembly();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
