@@ -29,25 +29,4 @@ public class ArticleController : ControllerBase
         return this.ToActionResult(result);
 
     }
-
-    [HttpPost]
-    public async Task<IActionResult> AddArticle([FromBody] ArticleDto article)
-    {
-        var result = await _articleService.Add(article);
-        return this.ToActionResult(result);
-    }
-
-    [HttpPut]
-    public async Task<IActionResult> UpdateArticle([FromBody] ArticleDto article)
-    {
-        var result = await _articleService.Update(article);
-        return this.ToActionResult(result);
-    }
-
-    [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteArticle(int id)
-    {
-        var result = await _articleService.Delete(id);
-        return this.ToActionResult(result);
-    }
 }
