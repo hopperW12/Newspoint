@@ -2,14 +2,15 @@ import React from "react";
 import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Article from "../components/Article";
+import "../assets/styles/pages/HomePage.css";
 
 const HomePage = () => {
   const [articles, setArticles] = useState([]);
-  const [loading, setLoading] = useState(true); // stav načítání
-  const [error, setError] = useState(null); // stav chyby
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/api/article") // URL tvého backendu
+    fetch("/api/article")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Chyba při načítání článků");
