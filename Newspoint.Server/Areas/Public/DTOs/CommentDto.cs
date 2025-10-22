@@ -1,6 +1,8 @@
-﻿namespace Newspoint.Application.DTOs;
+﻿using Newspoint.Server.Interfaces;
 
-public class CommentDto
+namespace Newspoint.Server.Areas.Public.DTOs;
+
+public class CommentDto : IEntityDto
 {
     public int Id { get; set; }
     public int ArticleId { get; set; }

@@ -1,9 +1,9 @@
 ﻿using Moq;
-using Newspoint.Application.DTOs;
 using Newspoint.Application.Services;
+using Newspoint.Domain.Entities;
 using Newspoint.Server.Controllers;
 
-namespace Newspoint.Tests.Controllers;
+namespace Newspoint.Tests.Controllers.Public;
 
 public class CategoryControllerTests
 {
@@ -19,11 +19,13 @@ public class CategoryControllerTests
     [Fact]
     public async Task GetCategories()
     {
+        // Arrange
         _mockService.Setup(a => a.GetAll())
-            .ReturnsAsync(new List<CategoryDto>());
-
+            .ReturnsAsync(new List<Category>());
+        
+        // Test
         var result = await _controller.GetAll();
-        Assert.IsAssignableFrom<IEnumerable<CategoryDto>>(result);
+        Assert.IsAssignableFrom<IEnumerable<Category>>(result);
         _mockService.Verify(s => s.GetAll(), Times.Once);
     }
 }

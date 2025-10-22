@@ -1,15 +1,13 @@
-﻿using Newspoint.Application.DTOs;
-using Newspoint.Application.Mappers;
-using Newspoint.Domain.Entities;
+﻿using Newspoint.Domain.Entities;
 using Newspoint.Infrastructure.Repositories;
 
 namespace Newspoint.Application.Services;
 
 public interface ICommentService : IService
 {
-    Task<Result<CommentDto>> GetById(int id);
-    Task<Result<CommentDto>> Add(CommentDto commentDto);
-    Task<Result<CommentDto>> Update(CommentDto commentDto);
+    Task<Result<Comment>> GetById(int id);
+    Task<Result<Comment>> Add(Comment comment);
+    Task<Result<Comment>> Update(Comment comment);
     Task<Result> Delete(int id);
 }
 
@@ -18,37 +16,33 @@ public class CommentService : ICommentService
     private readonly IUserRepository _userRepository;
     private readonly IArticleRepository _articleRepository;
     private readonly ICommentRepository _commentRepository;
-    private readonly IMapper<Comment, CommentDto> _commentMapper;
 
     public CommentService(
         IUserRepository userRepository,
         IArticleRepository articleRepository,
-        ICommentRepository commentRepository,
-        IMapper<Comment, CommentDto> commentMapper)
+        ICommentRepository commentRepository)
     {
         _userRepository = userRepository;
         _articleRepository = articleRepository;
         _commentRepository = commentRepository;
-        _commentMapper = commentMapper;
     }
 
-    public async Task<Result<CommentDto>> GetById(int id)
+    public async Task<Result<Comment>> GetById(int id)
     {
         var comment = await _commentRepository.GetById(id);
         if (comment == null)
-            return Result<CommentDto>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
+            return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
 
-        return Result<CommentDto>.Ok(_commentMapper.Map(comment));
+        return Result<Comment>.Ok(comment);
     }
 
-    public async Task<Result<CommentDto>> Add(CommentDto commentDto)
+    public async Task<Result<Comment>> Add(Comment comment)
     {
-        var comment = _commentMapper.MapBack(commentDto);
 
         // Find article in DB
         var article = await _articleRepository.GetById(comment.ArticleId);
         if (article == null)
-            return Result<CommentDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
+            return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
 
         comment.ArticleId = article.Id;
         comment.Article = article;
@@ -56,7 +50,7 @@ public class CommentService : ICommentService
         // Find author in DB
         var author = await _userRepository.GetById(comment.AuthorId);
         if (author == null)
-            return Result<CommentDto>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
+            return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
 
         comment.AuthorId = author.Id;
         comment.Author = author;
@@ -64,26 +58,26 @@ public class CommentService : ICommentService
         // Add comment to DB
         var result = await _commentRepository.Add(comment);
         if (result == null)
-            return Result<CommentDto>.Error(ResultErrorType.UnknownError, ServiceMessages.CommentError);
+            return Result<Comment>.Error(ResultErrorType.UnknownError, ServiceMessages.CommentError);
 
-        return Result<CommentDto>.Ok(_commentMapper.Map(result));
+        return Result<Comment>.Ok(result);
     }
 
-    public async Task<Result<CommentDto>> Update(CommentDto commentDto)
+    public async Task<Result<Comment>> Update(Comment commentDto)
     {
         // Find comment in DB
-        var comment = await _commentRepository.GetById(commentDto.Id);
-        if (comment == null)
-            return Result<CommentDto>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
+        var commentDb = await _commentRepository.GetById(commentDto.Id);
+        if (commentDb == null)
+            return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
 
-        comment.Content = commentDto.Content;
+        commentDb.Content = commentDto.Content;
 
         // Update comment in DB
-        var result = await _commentRepository.Update(comment);
+        var result = await _commentRepository.Update(commentDb);
         if (result == null)
-            return Result<CommentDto>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
+            return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
 
-        return Result<CommentDto>.Ok(_commentMapper.Map(result));
+        return Result<Comment>.Ok(result);
     }
 
     public async Task<Result> Delete(int id)

@@ -13,5 +13,5 @@ public class Article : IEntity
     public int AuthorId { get; set; }
     public User Author { get; set; }
 
-    public ICollection<Comment> Comments { get; set; }
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

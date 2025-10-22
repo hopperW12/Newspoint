@@ -1,7 +1,8 @@
-﻿using Newspoint.Application.DTOs;
-using Newspoint.Domain.Entities;
+﻿using Newspoint.Domain.Entities;
+using Newspoint.Server.Areas.Public.DTOs;
+using Newspoint.Server.Interfaces;
 
-namespace Newspoint.Application.Mappers;
+namespace Newspoint.Server.Areas.Public.Mappers;
 
 public class CategoryMapper : IMapper<Category, CategoryDto>
 {
@@ -9,6 +10,7 @@ public class CategoryMapper : IMapper<Category, CategoryDto>
     {
         return new CategoryDto
         {
+            Id = entity.Id,
             Name = entity.Name
         };
     }
@@ -17,6 +19,7 @@ public class CategoryMapper : IMapper<Category, CategoryDto>
     {
         return new Category
         {
+            Id = dto.Id,
             Name = dto.Name
         };
     }

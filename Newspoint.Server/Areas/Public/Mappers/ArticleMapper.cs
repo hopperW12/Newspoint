@@ -1,10 +1,18 @@
-﻿using Newspoint.Application.DTOs;
-using Newspoint.Domain.Entities;
+﻿using Newspoint.Domain.Entities;
+using Newspoint.Server.Areas.Public.DTOs;
+using Newspoint.Server.Interfaces;
 
-namespace Newspoint.Application.Mappers;
+namespace Newspoint.Server.Areas.Public.Mappers;
 
 public class ArticleMapper : IMapper<Article, ArticleDto>
 {
+    private readonly IMapper<Comment, CommentDto> _commentMapper;
+    
+    public ArticleMapper(IMapper<Comment, CommentDto> commentMapper)
+    {
+        _commentMapper = commentMapper;
+    }
+    
     public ArticleDto Map(Article entity)
     {
         return new ArticleDto
@@ -16,7 +24,8 @@ public class ArticleMapper : IMapper<Article, ArticleDto>
             CategoryId = entity.CategoryId,
             Category = entity.Category.Name,
             AuthorId = entity.AuthorId,
-            Author = $"{entity.Author.FirstName} {entity.Author.LastName}"
+            Author = $"{entity.Author.FirstName} {entity.Author.LastName}",
+            Comments = entity.Comments.Select(_commentMapper.Map).ToList()
         };
     }
 

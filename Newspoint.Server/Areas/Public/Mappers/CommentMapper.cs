@@ -1,7 +1,8 @@
-﻿using Newspoint.Application.DTOs;
-using Newspoint.Domain.Entities;
+﻿using Newspoint.Domain.Entities;
+using Newspoint.Server.Areas.Public.DTOs;
+using Newspoint.Server.Interfaces;
 
-namespace Newspoint.Application.Mappers;
+namespace Newspoint.Server.Areas.Public.Mappers;
 
 public class CommentMapper : IMapper<Comment, CommentDto>
 {

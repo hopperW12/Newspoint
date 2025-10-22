@@ -1,31 +1,25 @@
-﻿using Newspoint.Application.DTOs;
-using Newspoint.Application.Mappers;
-using Newspoint.Domain.Entities;
+﻿using Newspoint.Domain.Entities;
 using Newspoint.Infrastructure.Repositories;
 
 namespace Newspoint.Application.Services;
 
 public interface ICategoryService : IService
 {
-    Task<ICollection<CategoryDto>> GetAll();
+    Task<ICollection<Category>> GetAll();
 }
 
 public class CategoryService : ICategoryService
 {
     private readonly ICategoryRepository _categoryRepository;
-    private readonly IMapper<Category, CategoryDto> _categoryMapper;
 
     public CategoryService(
-        ICategoryRepository categoryRepository,
-        IMapper<Category, CategoryDto> categoryMapper)
+        ICategoryRepository categoryRepository)
     {
         _categoryRepository = categoryRepository;
-        _categoryMapper = categoryMapper;
     }
 
-    public async Task<ICollection<CategoryDto>> GetAll()
+    public Task<ICollection<Category>> GetAll()
     {
-        var categories = await _categoryRepository.GetAll();
-        return categories.Select(category => _categoryMapper.Map(category)).ToList();
+        return _categoryRepository.GetAll();
     }
 }

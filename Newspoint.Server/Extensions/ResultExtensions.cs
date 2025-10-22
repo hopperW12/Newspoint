@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services;
+using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Extensions;
 
@@ -12,20 +13,32 @@ public static class ResultExtensions
 
         return result.ErrorType switch
         {
-            ResultErrorType.NotFound => controller.NotFound(new Result { Success = result.Success, Message = result.Message }),
-            _ => controller.StatusCode(500, new Result { Success = result.Success, Message = result.Message })
+            ResultErrorType.NotFound => controller.NotFound(
+                new Result { Success = result.Success, Message = result.Message }),
+            _ => controller.StatusCode(
+                500, 
+                new Result { Success = result.Success, Message = result.Message })
         };
     }
 
-    public static IActionResult ToActionResult<T>(this ControllerBase controller, Result<T> result)
+    public static IActionResult ToActionResult<TSource, TDestination>(
+        this ControllerBase controller, Result<TSource> result,
+        IMapper<TSource, TDestination> mapper)
+        where TDestination : IEntityDto
     {
-        if (result.Success)
-            return controller.Ok(new Result<T> { Success = result.Success, Data = result.Data });
+        // Handle errors
+        if (!result.Success)
+            return result.ErrorType switch
+            {
+                ResultErrorType.NotFound => controller.NotFound(
+                    new Result<TDestination> { Success = result.Success, Message = result.Message }),
+                _ => controller.StatusCode(500,
+                    new Result<TDestination> { Success = result.Success, Message = result.Message })
+            };
+        
+        // Map data
+        var mappedData = result.Data is not null ? mapper.Map(result.Data) : default;
+        return controller.Ok(new Result<TDestination> { Success = true, Data = mappedData });
 
-        return result.ErrorType switch
-        {
-            ResultErrorType.NotFound => controller.NotFound(new Result<T> { Success = result.Success, Message = result.Message }),
-            _ => controller.StatusCode(500, new Result<T> { Success = result.Success, Message = result.Message })
-        };
     }
 }

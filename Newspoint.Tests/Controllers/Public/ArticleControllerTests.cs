@@ -1,20 +1,24 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Moq;
-using Newspoint.Application.DTOs;
 using Newspoint.Application.Services;
-using Newspoint.Server.Controllers;
+using Newspoint.Domain.Entities;
+using Newspoint.Server.Areas.Public.Controllers;
+using Newspoint.Server.Areas.Public.DTOs;
+using Newspoint.Server.Interfaces;
 
-namespace Newspoint.Tests.Controllers;
+namespace Newspoint.Tests.Controllers.Public;
 
 public class ArticleControllerTests
 {
     private readonly Mock<IArticleService> _mockService;
+    private readonly Mock<IMapper<Article, ArticleDto>> _mockMapper;
     private readonly ArticleController _controller;
 
     public ArticleControllerTests()
     {
         _mockService = new Mock<IArticleService>();
-        _controller = new ArticleController(_mockService.Object);
+        _mockMapper = new Mock<IMapper<Article, ArticleDto>>();
+        _controller = new ArticleController(_mockService.Object, _mockMapper.Object);
     }
 
     // Get Articles
@@ -22,9 +26,11 @@ public class ArticleControllerTests
     [Fact]
     public async Task GetArticles()
     {
+        // Arrange
         _mockService.Setup(a => a.GetAll())
-            .ReturnsAsync(new List<ArticleDto>());
-
+            .ReturnsAsync(new List<Article>());
+        
+        // Test
         var result = await _controller.GetArticles();
         Assert.IsAssignableFrom<IEnumerable<ArticleDto>>(result);
         _mockService.Verify(s => s.GetAll(), Times.Once);
@@ -35,9 +41,13 @@ public class ArticleControllerTests
     [Fact]
     public async Task GetArticleById_When_ResultOk()
     {
+        // Arrange
         _mockService.Setup(a => a.GetByIdWithComments(1))
-            .ReturnsAsync(Result<ArticleDto>.Ok(new ArticleDto()));
-
+            .ReturnsAsync(Result<Article>.Ok(new Article()));
+        _mockMapper.Setup(m => m.Map(It.IsAny<Article>()))
+            .Returns(new ArticleDto());
+        
+        // Test
         var actionResult = await _controller.GetById(1);
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
         var result = Assert.IsType<Result<ArticleDto>>(okResult.Value);
@@ -50,9 +60,11 @@ public class ArticleControllerTests
     [Fact]
     public async Task GetArticleById_When_ResultNotFound()
     {
+        // Arrange
         _mockService.Setup(a => a.GetByIdWithComments(1))
-            .ReturnsAsync(Result<ArticleDto>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
-
+            .ReturnsAsync(Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
+        
+        // Test
         var actionResult = await _controller.GetById(1);
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
         var result = Assert.IsType<Result<ArticleDto>>(notFoundResult.Value);
@@ -64,9 +76,11 @@ public class ArticleControllerTests
     [Fact]
     public async Task GetArticleById_When_ResultStatusCode()
     {
+        // Arrange
         _mockService.Setup(a => a.GetByIdWithComments(1))
-            .ReturnsAsync(Result<ArticleDto>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
-
+            .ReturnsAsync(Result<Article>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
+        
+        // Test
         var actionResult = await _controller.GetById(1);
         var objectResult = Assert.IsType<ObjectResult>(actionResult);
         Assert.Equal(500, objectResult.StatusCode);

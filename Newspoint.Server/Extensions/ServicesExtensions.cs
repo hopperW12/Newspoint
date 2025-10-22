@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newspoint.Application.Mappers;
 using Newspoint.Application.Services;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
 using Newspoint.Infrastructure.Repositories;
+using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Extensions;
 

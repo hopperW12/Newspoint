@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newspoint.Application.DTOs;
 using Newspoint.Application.Services;
 using Newspoint.Server.Extensions;
 

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Newspoint.Application.DTOs;
 using Newspoint.Application.Services;
+using Newspoint.Domain.Entities;
 
 namespace Newspoint.Server.Controllers
 {
@@ -16,7 +16,7 @@ namespace Newspoint.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<CategoryDto>> GetAll()
+        public async Task<IEnumerable<Category>> GetAll()
         {
             return await _categoryService.GetAll();
         }
