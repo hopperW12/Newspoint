@@ -1,24 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Public.Controllers;
 using Newspoint.Server.Areas.Public.DTOs;
-using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Tests.Controllers.Public;
 
 public class ArticleControllerTests
 {
     private readonly Mock<IArticleService> _mockService;
-    private readonly Mock<IMapper<Article, ArticleDto>> _mockMapper;
+    private readonly Mock<IMapper> _mockMapper;
     private readonly ArticleController _controller;
 
     public ArticleControllerTests()
     {
         _mockService = new Mock<IArticleService>();
-        _mockMapper = new Mock<IMapper<Article, ArticleDto>>();
-        _controller = new ArticleController(_mockService.Object, _mockMapper.Object);
+        _mockMapper = new Mock<IMapper>();
+        _controller = new ArticleController(
+            _mockService.Object,
+            _mockMapper.Object);
     }
 
     // Get Articles
@@ -44,7 +46,7 @@ public class ArticleControllerTests
         // Arrange
         _mockService.Setup(a => a.GetByIdWithComments(1))
             .ReturnsAsync(Result<Article>.Ok(new Article()));
-        _mockMapper.Setup(m => m.Map(It.IsAny<Article>()))
+        _mockMapper.Setup(m => m.Map<ArticleDto>(It.IsAny<Article>()))
             .Returns(new ArticleDto());
 
         // Test

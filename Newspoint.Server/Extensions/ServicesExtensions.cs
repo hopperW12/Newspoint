@@ -3,7 +3,6 @@ using Newspoint.Application.Services;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
 using Newspoint.Infrastructure.Repositories;
-using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Extensions;
 
@@ -43,18 +42,6 @@ public static class ServicesExtensions
         {
             scan.FromAssembliesOf(typeof(IRepository))
                 .AddClasses(c => c.AssignableTo(typeof(IRepository)))
-                .AsImplementedInterfaces()
-                .WithScopedLifetime();
-        });
-        return services;
-    }
-
-    public static IServiceCollection AddMappersFromAssembly(this IServiceCollection services)
-    {
-        services.Scan(scan =>
-        {
-            scan.FromAssembliesOf(typeof(IMapper<,>))
-                .AddClasses(c => c.AssignableTo(typeof(IMapper<,>)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime();
         });

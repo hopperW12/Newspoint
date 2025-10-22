@@ -1,9 +1,9 @@
-﻿using Moq;
+﻿using AutoMapper;
+using Moq;
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Public.Controllers;
 using Newspoint.Server.Areas.Public.DTOs;
-using Newspoint.Server.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Newspoint.Tests.Controllers.Public;
@@ -12,13 +12,15 @@ public class CommentControllerTests
 {
     private readonly CommentController _controller;
     private readonly Mock<ICommentService> _mockService;
-    private readonly Mock<IMapper<Comment, CommentDto>> _mockMapper;
+    private readonly Mock<IMapper> _mockMapper;
 
     public CommentControllerTests()
     {
         _mockService = new Mock<ICommentService>();
-        _mockMapper = new Mock<IMapper<Comment, CommentDto>>();
-        _controller = new CommentController(_mockService.Object, _mockMapper.Object);
+        _mockMapper = new Mock<IMapper>();
+        _controller = new CommentController(
+            _mockService.Object,
+            _mockMapper.Object);
     }
     
     
@@ -30,7 +32,7 @@ public class CommentControllerTests
         // Arrange
         _mockService.Setup(a => a.GetById(1))
             .ReturnsAsync(Result<Comment>.Ok(new Comment()));
-        _mockMapper.Setup(m => m.Map(It.IsAny<Comment>()))
+        _mockMapper.Setup(m => m.Map<CommentDto>(It.IsAny<Comment>()))
             .Returns(new CommentDto());
 
         // Test

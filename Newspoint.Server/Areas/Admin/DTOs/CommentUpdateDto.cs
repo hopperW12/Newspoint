@@ -1,8 +1,6 @@
-﻿using Newspoint.Server.Interfaces;
+﻿namespace Newspoint.Server.Areas.Admin.DTOs;
 
-namespace Newspoint.Server.Areas.Admin.DTOs;
-
-public class CommentUpdateDto : IEntityDto
+public class CommentUpdateDto
 {
     public int Id { get; set; }
     public string Content { get; set; }

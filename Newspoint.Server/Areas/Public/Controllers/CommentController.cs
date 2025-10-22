@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Public.DTOs;
 using Newspoint.Server.Extensions;
-using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Areas.Public.Controllers;
 
@@ -12,11 +12,11 @@ namespace Newspoint.Server.Areas.Public.Controllers;
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
-    private readonly IMapper<Comment, CommentDto> _mapper;
+    private readonly IMapper _mapper;
 
     public CommentController(
         ICommentService commentService,
-        IMapper<Comment, CommentDto> mapper)
+        IMapper mapper)
     {
         _commentService = commentService;
         _mapper = mapper;
@@ -26,6 +26,6 @@ public class CommentController : ControllerBase
     public async Task<IActionResult> GetCommentById(int id)
     {
         var result = await _commentService.GetById(id);
-        return this.ToActionResult(result, _mapper);
+        return this.ToActionResult<Comment, CommentDto>(result, _mapper);
     }
 }

@@ -1,4 +1,4 @@
-name: Tests (manual only)
+name: Tests (Newspoint.Tests, manual only)
 
 on:
   workflow_dispatch:
@@ -22,14 +22,14 @@ jobs:
         with:
           dotnet-version: 9.0.x
 
-      - name: Restore
-        run: dotnet restore
+      - name: Restore Newspoint.Tests
+        run: dotnet restore Newspoint.Tests/Newspoint.Tests.csproj
 
-      - name: Build (Release)
-        run: dotnet build --configuration Release --no-restore
+      - name: Build Newspoint.Tests (Release)
+        run: dotnet build Newspoint.Tests/Newspoint.Tests.csproj --configuration Release --no-restore
 
-      - name: Test
-        run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+      - name: Test Newspoint.Tests
+        run: dotnet test Newspoint.Tests/Newspoint.Tests.csproj --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
 
       - name: Publish test results
         if: always()

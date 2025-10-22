@@ -1,47 +1,15 @@
-﻿using Newspoint.Domain.Entities;
+﻿using AutoMapper;
+using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Public.DTOs;
-using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Areas.Public.Mappers;
 
-public class CommentMapper : IMapper<Comment, CommentDto>
+public class CommentProfile : Profile
 {
-    public CommentDto Map(Comment entity)
-    {
-        return new CommentDto
-        {
-            Id = entity.Id,
-            Content = entity.Content,
-            PublishedAt = entity.PublishedAt,
-            ArticleId = entity.ArticleId,
-            Article = entity.Article.Title,
-            AuthorId = entity.AuthorId,
-            Author = $"{entity.Author.FirstName} {entity.Author.LastName}"
-        };
-    }
-
-    public Comment MapBack(CommentDto dto)
-    {
-        var names = dto.Author.Split(' ', 2);
-
-        return new Comment
-        {
-            Id = dto.Id,
-            Content = dto.Content,
-            PublishedAt = dto.PublishedAt,
-            ArticleId = dto.ArticleId,
-            Article = new Article
-            {
-                Id = dto.ArticleId,
-                Title = dto.Article
-            },
-            AuthorId = dto.AuthorId,
-            Author = new User
-            {
-                Id = dto.AuthorId,
-                FirstName = names[0],
-                LastName = names[1]
-            }
-        };
-    }
+   public CommentProfile()
+   {
+      CreateMap<Comment, CommentDto>()
+         .ForMember(dest => dest.Article, opt => opt.MapFrom(src => src.Article.Title)) 
+         .ForMember(dest => dest.Author, opt => opt.MapFrom(src => $"{src.Author.FirstName} {src.Author.LastName}"));
+   }
 }

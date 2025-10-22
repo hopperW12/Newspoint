@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Admin.DTOs;
 using Newspoint.Server.Areas.Public.DTOs;
 using Newspoint.Server.Extensions;
-using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Areas.Admin.Controllers;
 
@@ -14,36 +14,28 @@ namespace Newspoint.Server.Areas.Admin.Controllers;
 public class ArticleController : ControllerBase
 {
     private readonly IArticleService _articleService;
-    private readonly IMapper<Article, ArticleDto> _articleMapper;
-    private readonly IMapper<Article, ArticleCreateDto> _articleCreateMapper;
-    private readonly IMapper<Article, ArticleUpdateDto> _articleUpdateMapper;
+    private readonly IMapper _mapper;
 
-    public ArticleController(
-        IArticleService articleService,
-        IMapper<Article, ArticleDto> articleMapper,
-        IMapper<Article, ArticleCreateDto> articleCreateMapper,
-        IMapper<Article, ArticleUpdateDto> articleUpdateMapper)
+    public ArticleController(IArticleService articleService, IMapper mapper)
     {
         _articleService = articleService;
-        _articleMapper = articleMapper;
-        _articleCreateMapper = articleCreateMapper;
-        _articleUpdateMapper = articleUpdateMapper;
+        _mapper = mapper;
     }
 
     [HttpPost]
     public async Task<IActionResult> AddArticle([FromBody] ArticleCreateDto articleDto)
     {
-        var article = _articleCreateMapper.MapBack(articleDto);
+        var article = _mapper.Map<Article>(articleDto);
         var result = await _articleService.Add(article);
-        return this.ToActionResult(result, _articleMapper);
+        return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateArticle([FromBody] ArticleUpdateDto articleDto)
     {
-        var article = _articleUpdateMapper.MapBack(articleDto);
+        var article = _mapper.Map<Article>(articleDto);
         var result = await _articleService.Update(article);
-        return this.ToActionResult(result, _articleMapper);
+        return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
 
     [HttpDelete("{id:int}")]

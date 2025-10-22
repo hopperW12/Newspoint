@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services;
-using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Extensions;
 
@@ -23,8 +23,7 @@ public static class ResultExtensions
 
     public static IActionResult ToActionResult<TSource, TDestination>(
         this ControllerBase controller, Result<TSource> result,
-        IMapper<TSource, TDestination> mapper)
-        where TDestination : IEntityDto
+        IMapper mapper)
     {
         // Handle errors
         if (!result.Success)
@@ -37,7 +36,7 @@ public static class ResultExtensions
             };
 
         // Map data
-        var mappedData = result.Data is not null ? mapper.Map(result.Data) : default;
+        var mappedData = result.Data is not null ? mapper.Map<TDestination>(result.Data) : default;
         return controller.Ok(new Result<TDestination> { Success = true, Data = mappedData });
 
     }

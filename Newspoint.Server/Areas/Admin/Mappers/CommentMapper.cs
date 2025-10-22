@@ -1,57 +1,19 @@
-﻿using Newspoint.Domain.Entities;
+﻿using AutoMapper;
+using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Admin.DTOs;
-using Newspoint.Server.Interfaces;
 
 namespace Newspoint.Server.Areas.Admin.Mappers;
 
-public class CommentCreateMapper : IMapper<Comment, CommentCreateDto>
+public class CommentProfile : Profile
 {
-    public CommentCreateDto Map(Comment entity)
+    public CommentProfile()
     {
-        return new CommentCreateDto
-        {
-            Content = entity.Content,
-            PublishedAt = entity.PublishedAt,
-            ArticleId = entity.ArticleId,
-            AuthorId = entity.AuthorId
-        };
-    }
+        CreateMap<CommentCreateDto, Comment>()
+            .ForMember(dest => dest.Author, opt => opt.Ignore()) 
+            .ForMember(dest => dest.Article, opt => opt.Ignore());
 
-    public Comment MapBack(CommentCreateDto dto)
-    {
-        return new Comment
-        {
-            Content = dto.Content,
-            PublishedAt = dto.PublishedAt,
-            ArticleId = dto.ArticleId,
-            AuthorId = dto.AuthorId
-        };
-    }
-}
-
-public class CommentUpdateMapper : IMapper<Comment, CommentUpdateDto>
-{
-    public CommentUpdateDto Map(Comment entity)
-    {
-        return new CommentUpdateDto
-        {
-            Id = entity.Id,
-            Content = entity.Content,
-            PublishedAt = entity.PublishedAt,
-            ArticleId = entity.ArticleId,
-            AuthorId = entity.AuthorId
-        };
-    }
-
-    public Comment MapBack(CommentUpdateDto dto)
-    {
-        return new Comment
-        {
-            Id = dto.Id,
-            Content = dto.Content,
-            PublishedAt = dto.PublishedAt,
-            ArticleId = dto.ArticleId,
-            AuthorId = dto.AuthorId
-        };
+        CreateMap<CommentUpdateDto, Comment>()
+            .ForMember(dest => dest.Author, opt => opt.Ignore())
+            .ForMember(dest => dest.Article, opt => opt.Ignore());
     }
 }

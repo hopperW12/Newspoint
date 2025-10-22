@@ -1,8 +1,6 @@
-﻿using Newspoint.Server.Interfaces;
+﻿namespace Newspoint.Server.Areas.Public.DTOs;
 
-namespace Newspoint.Server.Areas.Public.DTOs;
-
-public class ArticleDto : IEntityDto
+public class ArticleDto
 {
     public int Id { get; set; }
     public string Title { get; set; }
