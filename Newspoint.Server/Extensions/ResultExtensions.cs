@@ -16,7 +16,7 @@ public static class ResultExtensions
             ResultErrorType.NotFound => controller.NotFound(
                 new Result { Success = result.Success, Message = result.Message }),
             _ => controller.StatusCode(
-                500, 
+                500,
                 new Result { Success = result.Success, Message = result.Message })
         };
     }
@@ -35,7 +35,7 @@ public static class ResultExtensions
                 _ => controller.StatusCode(500,
                     new Result<TDestination> { Success = result.Success, Message = result.Message })
             };
-        
+
         // Map data
         var mappedData = result.Data is not null ? mapper.Map(result.Data) : default;
         return controller.Ok(new Result<TDestination> { Success = true, Data = mappedData });

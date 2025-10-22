@@ -22,7 +22,7 @@ public class CategoryControllerTests
         // Arrange
         _mockService.Setup(a => a.GetAll())
             .ReturnsAsync(new List<Category>());
-        
+
         // Test
         var result = await _controller.GetAll();
         Assert.IsAssignableFrom<IEnumerable<Category>>(result);

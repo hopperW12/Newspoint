@@ -29,7 +29,7 @@ public class ArticleControllerTests
         // Arrange
         _mockService.Setup(a => a.GetAll())
             .ReturnsAsync(new List<Article>());
-        
+
         // Test
         var result = await _controller.GetArticles();
         Assert.IsAssignableFrom<IEnumerable<ArticleDto>>(result);
@@ -46,7 +46,7 @@ public class ArticleControllerTests
             .ReturnsAsync(Result<Article>.Ok(new Article()));
         _mockMapper.Setup(m => m.Map(It.IsAny<Article>()))
             .Returns(new ArticleDto());
-        
+
         // Test
         var actionResult = await _controller.GetById(1);
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -63,7 +63,7 @@ public class ArticleControllerTests
         // Arrange
         _mockService.Setup(a => a.GetByIdWithComments(1))
             .ReturnsAsync(Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
-        
+
         // Test
         var actionResult = await _controller.GetById(1);
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
@@ -79,7 +79,7 @@ public class ArticleControllerTests
         // Arrange
         _mockService.Setup(a => a.GetByIdWithComments(1))
             .ReturnsAsync(Result<Article>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
-        
+
         // Test
         var actionResult = await _controller.GetById(1);
         var objectResult = Assert.IsType<ObjectResult>(actionResult);

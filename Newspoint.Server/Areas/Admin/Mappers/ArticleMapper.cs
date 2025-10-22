@@ -11,7 +11,7 @@ public class ArticleCreateMapper : IMapper<Article, ArticleCreateDto>
         return new ArticleCreateDto
         {
             Title = entity.Title,
-            Content =  entity.Content,
+            Content = entity.Content,
             PublishedAt = entity.PublishedAt,
             AuthorId = entity.AuthorId,
             CategoryId = entity.CategoryId

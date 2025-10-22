@@ -7,12 +7,12 @@ namespace Newspoint.Server.Areas.Public.Mappers;
 public class ArticleMapper : IMapper<Article, ArticleDto>
 {
     private readonly IMapper<Comment, CommentDto> _commentMapper;
-    
+
     public ArticleMapper(IMapper<Comment, CommentDto> commentMapper)
     {
         _commentMapper = commentMapper;
     }
-    
+
     public ArticleDto Map(Article entity)
     {
         return new ArticleDto

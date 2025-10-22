@@ -39,14 +39,14 @@ public class ArticleControllerTests
         var article = new Article();
         var articleDto = new ArticleDto();
         var articleCreateDto = new ArticleCreateDto();
-        
+
         _mockService.Setup(a => a.Add(It.IsAny<Article>()))
             .ReturnsAsync(Result<Article>.Ok(article));
         _mockArticleCreateMapper.Setup(m => m.MapBack(It.IsAny<ArticleCreateDto>()))
-            .Returns(article);       
+            .Returns(article);
         _mockArticleMapper.Setup(m => m.Map(It.IsAny<Article>()))
             .Returns(articleDto);
-        
+
         // Test
         var actionResult = await _controller.AddArticle(articleCreateDto);
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -63,11 +63,11 @@ public class ArticleControllerTests
         // Arrange
         var article = new Article();
         var articleCreateDto = new ArticleCreateDto();
-        
+
         _mockService.Setup(a => a.Add(It.IsAny<Article>()))
             .ReturnsAsync(Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
         _mockArticleCreateMapper.Setup(m => m.MapBack(It.IsAny<ArticleCreateDto>()))
-            .Returns(article);       
+            .Returns(article);
 
         // Test
         var actionResult = await _controller.AddArticle(articleCreateDto);
@@ -84,12 +84,12 @@ public class ArticleControllerTests
         // Arrange
         var article = new Article();
         var articleCreateDto = new ArticleCreateDto();
-        
+
         _mockService.Setup(a => a.Add(It.IsAny<Article>()))
             .ReturnsAsync(Result<Article>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
         _mockArticleCreateMapper.Setup(m => m.MapBack(It.IsAny<ArticleCreateDto>()))
-            .Returns(article);    
-        
+            .Returns(article);
+
         // Test
         var actionResult = await _controller.AddArticle(articleCreateDto);
         var resultObject = Assert.IsType<ObjectResult>(actionResult);
@@ -107,14 +107,14 @@ public class ArticleControllerTests
         var article = new Article();
         var articleDto = new ArticleDto();
         var articleUpdateDto = new ArticleUpdateDto();
-        
+
         _mockService.Setup(a => a.Update(It.IsAny<Article>()))
             .ReturnsAsync(Result<Article>.Ok(article));
         _mockArticleUpdateMapper.Setup(m => m.MapBack(It.IsAny<ArticleUpdateDto>()))
-            .Returns(article);       
+            .Returns(article);
         _mockArticleMapper.Setup(m => m.Map(It.IsAny<Article>()))
             .Returns(articleDto);
-    
+
         // Test
         var actionResult = await _controller.UpdateArticle(articleUpdateDto);
         var okResult = Assert.IsType<OkObjectResult>(actionResult);
@@ -130,12 +130,12 @@ public class ArticleControllerTests
         // Arrange
         var article = new Article();
         var articleUpdateDto = new ArticleUpdateDto();
-        
+
         _mockService.Setup(a => a.Update(It.IsAny<Article>()))
             .ReturnsAsync(Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
         _mockArticleUpdateMapper.Setup(m => m.MapBack(It.IsAny<ArticleUpdateDto>()))
-            .Returns(article);      
-        
+            .Returns(article);
+
         // Test
         var actionResult = await _controller.UpdateArticle(articleUpdateDto);
         var notFound = Assert.IsType<NotFoundObjectResult>(actionResult);
@@ -151,12 +151,12 @@ public class ArticleControllerTests
         // Arrange
         var article = new Article();
         var articleUpdateDto = new ArticleUpdateDto();
-        
+
         _mockService.Setup(a => a.Update(It.IsAny<Article>()))
             .ReturnsAsync(Result<Article>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
         _mockArticleUpdateMapper.Setup(m => m.MapBack(It.IsAny<ArticleUpdateDto>()))
-            .Returns(article);     
-        
+            .Returns(article);
+
         // Test
         var actionResult = await _controller.UpdateArticle(articleUpdateDto);
         var objectResult = Assert.IsType<ObjectResult>(actionResult);
@@ -187,7 +187,7 @@ public class ArticleControllerTests
         // Arrange
         _mockService.Setup(a => a.Delete(11))
             .ReturnsAsync(Result.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
-        
+
         // Test
         var actionResult = await _controller.DeleteArticle(11);
         var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
@@ -203,7 +203,7 @@ public class ArticleControllerTests
         // Arrange
         _mockService.Setup(a => a.Delete(11))
             .ReturnsAsync(Result.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
-        
+
         // Test
         var actionResult = await _controller.DeleteArticle(11);
         var objectResult = Assert.IsType<ObjectResult>(actionResult);

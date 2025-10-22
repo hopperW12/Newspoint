@@ -19,7 +19,7 @@ public class ArticleController : ControllerBase
         IMapper<Article, ArticleDto> mapper)
     {
         _articleService = articleService;
-        _mapper = mapper;   
+        _mapper = mapper;
     }
 
     [HttpGet]
