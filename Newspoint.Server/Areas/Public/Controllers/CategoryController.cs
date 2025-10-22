@@ -2,23 +2,22 @@
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
 
-namespace Newspoint.Server.Controllers
+namespace Newspoint.Server.Areas.Public.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class CategoryController : ControllerBase
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class CategoryController : ControllerBase
+    private readonly ICategoryService _categoryService;
+
+    public CategoryController(ICategoryService categoryService)
     {
-        private readonly ICategoryService _categoryService;
+        _categoryService = categoryService;
+    }
 
-        public CategoryController(ICategoryService categoryService)
-        {
-            _categoryService = categoryService;
-        }
-
-        [HttpGet]
-        public async Task<IEnumerable<Category>> GetAll()
-        {
-            return await _categoryService.GetAll();
-        }
+    [HttpGet]
+    public async Task<IEnumerable<Category>> GetAll()
+    {
+        return await _categoryService.GetAll();
     }
 }

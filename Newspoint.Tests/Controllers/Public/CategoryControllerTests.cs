@@ -1,7 +1,7 @@
 ﻿using Moq;
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
-using Newspoint.Server.Controllers;
+using Newspoint.Server.Areas.Public.Controllers;
 
 namespace Newspoint.Tests.Controllers.Public;
 
