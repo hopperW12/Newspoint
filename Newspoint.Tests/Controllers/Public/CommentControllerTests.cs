@@ -22,10 +22,10 @@ public class CommentControllerTests
             _mockService.Object,
             _mockMapper.Object);
     }
-    
-    
+
+
     // Get Comment By Id
-    
+
     [Fact]
     public async Task GetCommentById_When_ResultOk()
     {

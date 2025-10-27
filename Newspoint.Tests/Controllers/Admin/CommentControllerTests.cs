@@ -30,9 +30,9 @@ namespace Newspoint.Tests.Controllers.Admin
         public async Task AddComment_When_ReturnOk()
         {
             // Arrange
-            var comment = new Comment { Id = 1, Content = "New article!" }; 
+            var comment = new Comment { Id = 1, Content = "New article!" };
             var commentDto = new CommentDto { Id = 1, Content = "New article!" };
-            var createDto = new CommentCreateDto { Content = "New article!" }; 
+            var createDto = new CommentCreateDto { Content = "New article!" };
 
             _mockService.Setup(s => s.Add(It.IsAny<Comment>()))
                 .ReturnsAsync(Result<Comment>.Ok(comment));
@@ -48,8 +48,8 @@ namespace Newspoint.Tests.Controllers.Admin
 
             // Assert
             Assert.True(result.Success);
-            Assert.Equal(commentDto, result.Data); 
-            _mockService.Verify(s => s.Add(It.IsAny<Comment>()), Times.Once); 
+            Assert.Equal(commentDto, result.Data);
+            _mockService.Verify(s => s.Add(It.IsAny<Comment>()), Times.Once);
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Newspoint.Tests.Controllers.Admin
             _mockService.Setup(s => s.Add(It.IsAny<Comment>()))
                 .ReturnsAsync(Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound));
             _mockMapper.Setup(m => m.Map<CommentDto>(It.IsAny<Comment>()))
-                .Returns(new CommentDto()); 
+                .Returns(new CommentDto());
 
             // Test
             var actionResult = await _controller.AddComment(createDto);
@@ -69,7 +69,7 @@ namespace Newspoint.Tests.Controllers.Admin
             var result = Assert.IsType<Result<CommentDto>>(notFoundResult.Value);
 
             Assert.False(result.Success);
-            _mockService.Verify(s => s.Add(It.IsAny<Comment>()), Times.Once); 
+            _mockService.Verify(s => s.Add(It.IsAny<Comment>()), Times.Once);
         }
 
         [Fact]
@@ -81,14 +81,14 @@ namespace Newspoint.Tests.Controllers.Admin
             _mockService.Setup(s => s.Add(It.IsAny<Comment>()))
                 .ReturnsAsync(Result<Comment>.Error(ResultErrorType.UnknownError, ServiceMessages.CommentError));
             _mockMapper.Setup(m => m.Map<CommentDto>(It.IsAny<Comment>()))
-                .Returns(new CommentDto()); 
+                .Returns(new CommentDto());
 
             // Test
             var actionResult = await _controller.AddComment(createDto);
             var objectResult = Assert.IsType<ObjectResult>(actionResult);
-            
+
             Assert.Equal(500, objectResult.StatusCode);
-            _mockService.Verify(s => s.Add(It.IsAny<Comment>()), Times.Once); 
+            _mockService.Verify(s => s.Add(It.IsAny<Comment>()), Times.Once);
         }
 
         // Update Comment
@@ -98,8 +98,8 @@ namespace Newspoint.Tests.Controllers.Admin
         {
             // Arrange
             var comment = new Comment { Id = 1, Content = "Updated comment" };
-            var commentDto = new CommentDto { Id = 1, Content = "Updated comment" }; 
-            var updateDto = new CommentUpdateDto { Content = "Updated comment" }; 
+            var commentDto = new CommentDto { Id = 1, Content = "Updated comment" };
+            var updateDto = new CommentUpdateDto { Content = "Updated comment" };
 
             _mockService.Setup(s => s.Update(It.IsAny<Comment>()))
                 .ReturnsAsync(Result<Comment>.Ok(comment));
@@ -115,7 +115,7 @@ namespace Newspoint.Tests.Controllers.Admin
 
             Assert.True(result.Success);
             Assert.Equal(commentDto, result.Data);
-            _mockService.Verify(s => s.Update(It.IsAny<Comment>()), Times.Once); 
+            _mockService.Verify(s => s.Update(It.IsAny<Comment>()), Times.Once);
         }
 
         [Fact]
@@ -127,13 +127,13 @@ namespace Newspoint.Tests.Controllers.Admin
             _mockService.Setup(s => s.Update(It.IsAny<Comment>()))
                 .ReturnsAsync(Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound));
             _mockMapper.Setup(m => m.Map<CommentDto>(It.IsAny<Comment>()))
-                .Returns(new CommentDto()); 
+                .Returns(new CommentDto());
 
             // Test
             var actionResult = await _controller.UpdateComment(updateDto);
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
             var result = Assert.IsType<Result<CommentDto>>(notFoundResult.Value);
-            
+
             Assert.False(result.Success);
             _mockService.Verify(s => s.Update(It.IsAny<Comment>()), Times.Once);
         }
@@ -172,7 +172,7 @@ namespace Newspoint.Tests.Controllers.Admin
             var result = Assert.IsType<Result>(okResult.Value);
 
             Assert.True(result.Success);
-            _mockService.Verify(s => s.Delete(5), Times.Once); 
+            _mockService.Verify(s => s.Delete(5), Times.Once);
         }
 
         [Fact]

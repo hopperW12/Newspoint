@@ -31,7 +31,7 @@ namespace Newspoint.Tests.Controllers.Admin
         {
             // Arrange
             var articleCreateDto = new ArticleCreateDto();
-            var article = new Article { Id = 1, Title = "Test Article" }; 
+            var article = new Article { Id = 1, Title = "Test Article" };
             var articleDto = new ArticleDto { Id = 1, Title = "Test Article" };
 
             _mockService.Setup(a => a.Add(It.IsAny<Article>()))
@@ -48,7 +48,7 @@ namespace Newspoint.Tests.Controllers.Admin
 
             Assert.True(result.Success);
             Assert.Equal(articleDto, result.Data);
-            _mockService.Verify(s => s.Add(It.IsAny<Article>()), Times.Once); 
+            _mockService.Verify(s => s.Add(It.IsAny<Article>()), Times.Once);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Newspoint.Tests.Controllers.Admin
             var result = Assert.IsType<Result<ArticleDto>>(notFoundResult.Value);
 
             Assert.False(result.Success);
-            _mockService.Verify(s => s.Add(It.IsAny<Article>()), Times.Once); 
+            _mockService.Verify(s => s.Add(It.IsAny<Article>()), Times.Once);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Newspoint.Tests.Controllers.Admin
             var resultObject = Assert.IsType<ObjectResult>(actionResult);
 
             Assert.Equal(500, resultObject.StatusCode);
-            _mockService.Verify(s => s.Add(It.IsAny<Article>()), Times.Once); 
+            _mockService.Verify(s => s.Add(It.IsAny<Article>()), Times.Once);
         }
 
         // Update Article
@@ -98,9 +98,9 @@ namespace Newspoint.Tests.Controllers.Admin
         public async Task UpdateArticle_When_ReturnOk()
         {
             // Arrange
-            var articleUpdateDto = new ArticleUpdateDto { Title = "Updated Title" }; 
+            var articleUpdateDto = new ArticleUpdateDto { Title = "Updated Title" };
             var article = new Article { Id = 1, Title = "Updated Title" };
-            var articleDto = new ArticleDto { Id = 1, Title = "Updated Title" }; 
+            var articleDto = new ArticleDto { Id = 1, Title = "Updated Title" };
 
             _mockService.Setup(a => a.Update(It.IsAny<Article>()))
                 .ReturnsAsync(Result<Article>.Ok(article));
@@ -113,10 +113,10 @@ namespace Newspoint.Tests.Controllers.Admin
             var actionResult = await _controller.UpdateArticle(articleUpdateDto);
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
             var result = Assert.IsType<Result<ArticleDto>>(okResult.Value);
-            
+
             Assert.True(result.Success);
-            Assert.Equal(articleDto, result.Data); 
-            _mockService.Verify(s => s.Update(It.IsAny<Article>()), Times.Once); 
+            Assert.Equal(articleDto, result.Data);
+            _mockService.Verify(s => s.Update(It.IsAny<Article>()), Times.Once);
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace Newspoint.Tests.Controllers.Admin
             var result = Assert.IsType<Result<ArticleDto>>(notFoundResult.Value);
 
             Assert.False(result.Success);
-            _mockService.Verify(s => s.Update(It.IsAny<Article>()), Times.Once); 
+            _mockService.Verify(s => s.Update(It.IsAny<Article>()), Times.Once);
         }
 
         [Fact]
@@ -204,7 +204,7 @@ namespace Newspoint.Tests.Controllers.Admin
             var objectResult = Assert.IsType<ObjectResult>(actionResult);
 
             Assert.Equal(500, objectResult.StatusCode);
-            _mockService.Verify(s => s.Delete(11), Times.Once); 
+            _mockService.Verify(s => s.Delete(11), Times.Once);
         }
     }
 }

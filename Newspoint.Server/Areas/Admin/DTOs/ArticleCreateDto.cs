@@ -1,6 +1,6 @@
 ﻿namespace Newspoint.Server.Areas.Admin.DTOs;
 
-public class ArticleCreateDto 
+public class ArticleCreateDto
 {
     public string Title { get; set; }
     public string Content { get; set; }
