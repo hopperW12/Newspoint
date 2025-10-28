@@ -15,4 +15,8 @@ public static class ServiceMessages
 
     // Author
     public const string AuthorNotFound = "Tento autor nebyl nalezen.";
+    
+    // User
+    public const string UserEmailExist = "Tento email je již zaregistrovany.";
+    public const string UserRegisterError = "Nastala chyba.";
 }

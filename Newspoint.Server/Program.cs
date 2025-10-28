@@ -11,6 +11,8 @@ builder.Services.AddRepositoriesFromAssembly();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddServicesFromAssembly();
 
+builder.Services.AddJwtAuthentication(builder.Configuration);
+
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {

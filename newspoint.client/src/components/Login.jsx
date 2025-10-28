@@ -11,7 +11,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await fetch("/api/login", {
+      const res = await fetch("/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -20,7 +20,8 @@ const Login = () => {
       if (!res.ok) throw new Error("Špatný email nebo heslo");
 
       const data = await res.json();
-      onLogin?.(data);
+      localStorage.setItem("jwt", data.token); 
+      alert("Login successful!");
     } catch (err) {
       setError(err.message);
     }

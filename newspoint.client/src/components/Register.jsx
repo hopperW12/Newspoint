@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import "../assets/styles/pages/RegisterPage.css";
 
 const Register = () => {
-  const [name, setName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -21,16 +22,20 @@ const Register = () => {
     }
 
     try {
-      const res = await fetch("/api/register", {
+      const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify({ firstName, lastName, email, password }),
       });
 
       if (!res.ok) throw new Error("Registrace se nezdařila");
 
+      const data = await res.json();
+      localStorage.setItem("jwt", data.token);
+      
       setSuccess("Účet byl úspěšně vytvořen.");
-      setName("");
+      setFirstName("");
+      setLastName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
@@ -57,13 +62,23 @@ const Register = () => {
         {error && <p className="error-message">{error}</p>}
         {success && <p className="success-message">{success}</p>}
 
-        <label htmlFor="name">Jméno</label>
+        <label htmlFor="firstname">Křestní jméno</label>
         <input
           type="text"
-          id="name"
-          placeholder="Zadejte své jméno"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          id="firstname"
+          placeholder="Zadejte své křestní jméno"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+
+        <label htmlFor="lastname">Příjmení</label>
+        <input
+          type="text"
+          id="lastname"
+          placeholder="Zadejte své příjmení" 
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
           required
         />
 

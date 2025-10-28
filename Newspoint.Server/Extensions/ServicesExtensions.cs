@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Newspoint.Application.Services;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
@@ -45,6 +48,31 @@ public static class ServicesExtensions
                 .AsImplementedInterfaces()
                 .WithScopedLifetime();
         });
+        return services;
+    }
+
+    public static IServiceCollection AddJwtAuthentication(this IServiceCollection services, IConfiguration configuration)
+    {
+        var secret = configuration["Auth:Secret"] ?? "739f17f4b258de7e39184e84bcea413b";
+        var key = Encoding.ASCII.GetBytes(secret);
+        
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,     
+                    ValidateAudience = false,   
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                };
+            });
+        
         return services;
     }
 }
