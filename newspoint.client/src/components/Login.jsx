@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -20,8 +22,10 @@ const Login = () => {
       if (!res.ok) throw new Error("Špatný email nebo heslo");
 
       const data = await res.json();
-      localStorage.setItem("jwt", data.token); 
-      alert("Login successful!");
+      localStorage.setItem("jwt", data.token);
+
+      navigate("/");
+      window.location.reload();
     } catch (err) {
       setError(err.message);
     }
