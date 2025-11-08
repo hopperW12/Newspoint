@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Bogus.DataSets;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
@@ -11,6 +13,7 @@ namespace Newspoint.Server.Areas.Admin.Controllers;
 [ApiController]
 [Area("admin")]
 [Route("api/[area]/[controller]")]
+[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Editor)}")]
 public class ArticleController : ControllerBase
 {
     private readonly IArticleService _articleService;

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services;
 using Newspoint.Domain.Entities;
@@ -11,6 +12,7 @@ namespace Newspoint.Server.Areas.Admin.Controllers;
 [ApiController]
 [Area("admin")]
 [Route("api/[area]/[controller]")]
+[Authorize(Roles = $"{nameof(Role.Admin)},{nameof(Role.Editor)}")]
 public class CommentController : ControllerBase
 {
     private readonly ICommentService _commentService;
