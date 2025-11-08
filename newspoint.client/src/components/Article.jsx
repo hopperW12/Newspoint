@@ -1,46 +1,38 @@
-import React from "react";
+import { Link } from "react-router-dom";
+import defaultArticleImg from "../assets/images/default_article_img.png";
 
 const Article = ({ article }) => {
+  console.log(article);
   return (
     <article className="article-card" data-id="4">
-      <header className="article-header">
-        <div className="article-title-wrap">
-          <h1 className="article-title">{article.title}</h1>
+      <div className="article-title-wrap">
+        <div className="article-title-inner-wrap">
+          <Link to={`/Articles/${article.id}`}>
+            <img
+              src={defaultArticleImg}
+              alt="Clanek Image"
+              className="article-title-img"
+            />
+          </Link>
+        </div>
+        <div className="article-title-inner-wrap">
+          <Link to={`/Articles/${article.id}`} className="article-title">
+            {article.title}
+          </Link>
           <div className="article-category">{article.category}</div>
-        </div>
-
-        <div className="article-meta">
-          <p className="article-author">
-            <span className="article-avatar" aria-hidden="true">
-              {article.author
-                .split(" ")
-                .map((n) => n[0])
-                .join("")
-                .toUpperCase()}
-            </span>
-            {article.author}
+          <p className="article-text">
+            {article.content.split(" ").slice(0, 20).join(" ") +
+              (article.content.split(" ").length > 20 ? "... " : "")}
+            <Link
+              className="article-detail-link"
+              to={`/Articles/${article.id}`}
+            >
+              {" "}
+              Celý článek
+            </Link>
           </p>
-
-          <time className="article-published">
-            {new Date(article.publishedAt).toLocaleDateString("cs-CZ", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </time>
         </div>
-      </header>
-
-      <section className="article-content">
-        <p>{article.content}</p>
-      </section>
-
-      <section className="articles-comments">
-        <h2 className="articles-comments-title">
-          Comments <small>(0)</small>
-        </h2>
-        <div className="articles-comments-empty">Zatím žádné komentáře ...</div>
-      </section>
+      </div>
     </article>
   );
 };

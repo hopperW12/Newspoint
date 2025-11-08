@@ -1,0 +1,63 @@
+.user-page-container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+.user-page-title {
+  text-align: center;
+  font-size: 34px;
+  margin-bottom: 50px;
+}
+
+.user-page-form {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+.user-page-form-input {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  resize: none;
+}
+
+.user-page-form-btn {
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.user-page-form button:hover {
+  background-color: #0056b3;
+}
+
+.article-list {
+  list-style: none;
+  padding: 0;
+}
+
+.article-item {
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.article-item h3 {
+  margin: 0 0 10px 0;
+}
+
+.article-item p {
+  margin: 0;
+}

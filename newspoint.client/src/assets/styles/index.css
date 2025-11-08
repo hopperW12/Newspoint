@@ -61,6 +61,10 @@ img {
   border: none;
 }
 
+.logout-icon:hover {
+  color: #f2a900;
+}
+
 /* Mobile responsive */
 @media (max-width: 540px) {
   .navbar {
