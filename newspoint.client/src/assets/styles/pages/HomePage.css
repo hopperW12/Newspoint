@@ -19,9 +19,6 @@
   display: flex;
 }
 
-.article-title-inner-wrap {
-}
-
 .article-title-inner-wrap:first-child {
   margin-right: 10px;
   flex: 4;
