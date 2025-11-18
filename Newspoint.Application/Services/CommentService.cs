@@ -54,6 +54,9 @@ public class CommentService : ICommentService
 
         comment.AuthorId = author.Id;
         comment.Author = author;
+        
+        // Set published date
+        comment.PublishedAt = DateTime.Now;
 
         // Add comment to DB
         var result = await _commentRepository.Add(comment);
