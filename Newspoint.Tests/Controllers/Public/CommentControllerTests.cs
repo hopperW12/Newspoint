@@ -5,6 +5,7 @@ using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Public.Controllers;
 using Newspoint.Server.Areas.Public.DTOs;
 using Microsoft.AspNetCore.Mvc;
+using Newspoint.Application.Services.Interfaces;
 
 namespace Newspoint.Tests.Controllers.Public;
 

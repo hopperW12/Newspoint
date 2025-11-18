@@ -1,15 +1,9 @@
-﻿using Newspoint.Domain.Entities;
+﻿using Newspoint.Application.Services.Interfaces;
+using Newspoint.Domain.Entities;
 using Newspoint.Infrastructure.Repositories;
+using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Application.Services;
-
-public interface ICommentService : IService
-{
-    Task<Result<Comment>> GetById(int id);
-    Task<Result<Comment>> Add(Comment comment);
-    Task<Result<Comment>> Update(Comment comment);
-    Task<Result> Delete(int id);
-}
 
 public class CommentService : ICommentService
 {

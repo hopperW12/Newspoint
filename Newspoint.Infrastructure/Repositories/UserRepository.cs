@@ -2,16 +2,9 @@
 using Newspoint.Domain.Entities;
 using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
+using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Infrastructure.Repositories;
-
-public interface IUserRepository : IRepository
-{
-    public Task<User?> GetById(int id);
-    Task<User?> GetByEmail(string email);
-    Task<User?> Add(User user);
-    Task<bool> Delete(int id);
-}
 
 public class UserRepository : IUserRepository
 {

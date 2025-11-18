@@ -2,14 +2,9 @@
 using Newspoint.Domain.Entities;
 using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
+using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Infrastructure.Repositories;
-
-public interface ICategoryRepository : IRepository
-{
-    Task<ICollection<Category>> GetAll();
-    Task<Category?> GetById(int id);
-}
 
 public class CategoryRepository : ICategoryRepository
 {

@@ -1,12 +1,9 @@
-﻿using Newspoint.Domain.Entities;
+﻿using Newspoint.Application.Services.Interfaces;
+using Newspoint.Domain.Entities;
 using Newspoint.Infrastructure.Repositories;
+using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Application.Services;
-
-public interface ICategoryService : IService
-{
-    Task<ICollection<Category>> GetAll();
-}
 
 public class CategoryService : ICategoryService
 {

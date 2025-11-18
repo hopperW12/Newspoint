@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services;
+using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
 
 namespace Newspoint.Server.Areas.Public.Controllers;
