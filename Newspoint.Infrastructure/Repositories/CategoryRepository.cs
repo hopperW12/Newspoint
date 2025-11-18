@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newspoint.Domain.Entities;
+using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
 
 namespace Newspoint.Infrastructure.Repositories;

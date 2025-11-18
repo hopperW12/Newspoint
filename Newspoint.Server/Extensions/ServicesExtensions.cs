@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newspoint.Application.Services;
+using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
 using Newspoint.Infrastructure.Repositories;
