@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../assets/styles/pages/RegisterPage.css";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -32,13 +33,17 @@ const Register = () => {
 
       const data = await res.json();
       localStorage.setItem("jwt", data.token);
-      
+
       setSuccess("Účet byl úspěšně vytvořen.");
+
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
+
+      navigate("/");
+      window.location.reload();
     } catch (err) {
       setError(err.message);
     }
@@ -76,7 +81,7 @@ const Register = () => {
         <input
           type="text"
           id="lastname"
-          placeholder="Zadejte své příjmení" 
+          placeholder="Zadejte své příjmení"
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           required

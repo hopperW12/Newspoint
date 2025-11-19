@@ -1,0 +1,138 @@
+.article-detail {
+  max-width: 1100px;
+  margin: 40px auto 0 auto;
+  box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.article-detail-title {
+  font-weight: 400;
+  font-size: 38px;
+}
+
+.article-detail-author-wrap {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.article-detail-author-circle {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  border-radius: 50%;
+  background-color: rgba(129, 216, 231, 0.774);
+}
+
+.article-detail-author-name {
+  margin: 0 10px;
+}
+
+.article-detail-category {
+  display: inline-block;
+  margin-bottom: 20px;
+  padding: 6px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 999px;
+  color: #b36d00;
+  background: rgba(242, 169, 0, 0.1);
+}
+
+.article-detail-img {
+  display: block;
+  margin-bottom: 30px;
+  width: 500px;
+}
+
+.article-detail-text {
+  font-size: 18px;
+  line-height: 1.6;
+}
+
+.article-detail-divider {
+  height: 1px;
+  margin: 20px 0;
+  background-color: #ccc;
+  border: none;
+}
+
+/* Comments */
+.article-detail-comments-title {
+  margin-bottom: 15px;
+  font-size: 32px;
+  font-weight: 400;
+}
+
+.article-detail-comments-wrap {
+  display: flex;
+  flex-direction: column;
+  max-width: 700px;
+  gap: 30px;
+  font-family: Arial, sans-serif;
+}
+
+.article-detail-comment {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.15);
+}
+
+.article-detail-comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.article-detail-comment-author {
+  font-weight: bold;
+  color: #333;
+}
+
+.article-detail-comment-date {
+  font-size: 14px;
+  color: #888;
+}
+
+.article-detail-comment-content {
+  line-height: 1.6;
+  color: #333;
+  white-space: pre-wrap; /* zachova newlines */
+}
+
+/* Create Comment */
+.article-detail-comment-form {
+  margin-bottom: 30px;
+}
+
+.article-detail-comment-input {
+  height: 80px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  resize: none;
+  outline: none;
+}
+
+.article-detail-button-submit {
+  margin-top: 10px;
+  padding: 8px 16px;
+  font-size: 14px;
+  background-color: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.article-detail-button-submit:hover {
+  background-color: #1e4bb8;
+}

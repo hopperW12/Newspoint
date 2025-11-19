@@ -46,12 +46,22 @@ img {
   font-weight: 500;
 }
 
-/* Aktivní stránka */
-.navbar-links a.active {
-  border-bottom: 2px solid #f2a900;
+.navbar-links a:hover {
+  color: #f2a900;
 }
 
-.navbar-links a:hover {
+.user-links {
+  display: flex;
+  gap: 20px;
+}
+
+.logout-btn {
+  outline: none;
+  cursor: pointer;
+  border: none;
+}
+
+.logout-icon:hover {
   color: #f2a900;
 }
 
