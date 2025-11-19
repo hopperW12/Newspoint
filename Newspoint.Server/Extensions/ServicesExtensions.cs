@@ -45,7 +45,7 @@ public static class ServicesExtensions
     {
         services.Scan(scan =>
         {
-            scan.FromAssembliesOf(typeof(IRepository))
+            scan.FromAssembliesOf(typeof(IRepository), typeof(DataDbContext))
                 .AddClasses(c => c.AssignableTo(typeof(IRepository)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime();
