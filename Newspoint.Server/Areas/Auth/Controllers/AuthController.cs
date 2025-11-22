@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using Newspoint.Application.Services;
+using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Auth.DTOs;

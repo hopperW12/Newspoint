@@ -1,16 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newspoint.Domain.Entities;
+using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
+using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Infrastructure.Repositories;
-
-public interface ICommentRepository : IRepository
-{
-    Task<Comment?> GetById(int id);
-    Task<Comment?> Add(Comment entity);
-    Task<Comment?> Update(Comment entity);
-    Task<bool> Delete(int id);
-}
 
 public class CommentRepository : ICommentRepository
 {

@@ -1,18 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newspoint.Domain.Entities;
+using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
+using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Infrastructure.Repositories;
-
-public interface IArticleRepository : IRepository
-{
-    Task<ICollection<Article>> GetAll();
-    Task<Article?> GetById(int id);
-    Task<Article?> GetByIdWithComments(int id);
-    Task<Article?> Add(Article entity);
-    Task<Article?> Update(Article entity);
-    Task<bool> Delete(int id);
-}
 
 public class ArticleRepository : IArticleRepository
 {

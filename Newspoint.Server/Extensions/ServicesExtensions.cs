@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Newspoint.Application.Services;
+using Newspoint.Application.Services.Interfaces;
+using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
 using Newspoint.Infrastructure.Repositories;
@@ -43,7 +45,7 @@ public static class ServicesExtensions
     {
         services.Scan(scan =>
         {
-            scan.FromAssembliesOf(typeof(IRepository))
+            scan.FromAssembliesOf(typeof(IRepository), typeof(DataDbContext))
                 .AddClasses(c => c.AssignableTo(typeof(IRepository)))
                 .AsImplementedInterfaces()
                 .WithScopedLifetime();

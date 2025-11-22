@@ -1,8 +1,7 @@
-﻿namespace Newspoint.Server.Areas.Admin.DTOs;
+﻿namespace Newspoint.Server.Areas.Account.DTOs;
 
 public class CommentCreateDto
 {
     public string Content { get; set; }
-    public int AuthorId { get; set; }
     public int ArticleId { get; set; }
 }

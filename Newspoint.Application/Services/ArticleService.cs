@@ -1,17 +1,10 @@
-﻿using Newspoint.Domain.Entities;
+﻿using Newspoint.Application.Services.Interfaces;
+using Newspoint.Domain.Entities;
 using Newspoint.Infrastructure.Repositories;
+using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Application.Services;
 
-public interface IArticleService : IService
-{
-    Task<ICollection<Article>> GetAll();
-    Task<Result<Article>> GetById(int id);
-    Task<Result<Article>> GetByIdWithComments(int id);
-    Task<Result<Article>> Add(Article article);
-    Task<Result<Article>> Update(Article article);
-    Task<Result> Delete(int id);
-}
 public class ArticleService : IArticleService
 {
     private readonly ICategoryRepository _categoryRepository;
