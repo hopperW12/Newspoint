@@ -1,6 +1,6 @@
 .article-detail {
   max-width: 1100px;
-  margin: 40px auto 0 auto;
+  margin: 40px auto;
   box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.1);
   padding: 20px;
   border-radius: 20px;
@@ -90,14 +90,32 @@
   margin-bottom: 12px;
 }
 
-.article-detail-comment-author {
+.article-detail-comment-author > p {
   font-weight: bold;
   color: #333;
 }
 
 .article-detail-comment-date {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.article-detail-comment-date > p {
   font-size: 14px;
   color: #888;
+}
+
+.article-detail-comment-delete-btn {
+  position: relative;
+  top: 2px;
+  font-size: 20px;
+  margin-left: 10px;
+  outline: none;
+  background-color: #f9f9f9;
+  color: red;
+  border: none;
+  cursor: pointer;
 }
 
 .article-detail-comment-content {

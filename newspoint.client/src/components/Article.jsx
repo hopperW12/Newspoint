@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import defaultArticleImg from "../assets/images/default_article_img.png";
 
 const Article = ({ article }) => {
-  console.log(article);
   return (
     <article className="article-card" data-id="4">
       <div className="article-title-wrap">
