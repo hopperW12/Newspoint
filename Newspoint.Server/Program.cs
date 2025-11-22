@@ -19,16 +19,7 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "Newspoint API",
-        Version = "v1",
-        Description = "API dokumentace pro Newspoint Server"
-    });
-});
+builder.Services.AddNewspointSwagger();
 
 var app = builder.Build();
 

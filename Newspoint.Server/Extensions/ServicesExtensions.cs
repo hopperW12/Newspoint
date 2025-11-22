@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Newspoint.Application.Services;
 using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Interfaces;
@@ -75,6 +76,23 @@ public static class ServicesExtensions
                 };
             });
         
+        return services;
+    }
+    
+    public static IServiceCollection AddNewspointSwagger(this IServiceCollection services)
+    {
+        services.AddEndpointsApiExplorer();
+
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "Newspoint API",
+                Version = "v1",
+                Description = "API dokumentace pro Newspoint Server"
+            });
+        });
+
         return services;
     }
 }
