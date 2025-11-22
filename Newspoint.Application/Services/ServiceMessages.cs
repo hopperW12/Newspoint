@@ -2,6 +2,9 @@
 
 public static class ServiceMessages
 {
+    // General
+    public const string Error = "Nastala chyba.";
+    
     // Article
     public const string ArticleNotFound = "Tento článek nebyl nalezen.";
     public const string ArticleError = "Nastala chyba.";

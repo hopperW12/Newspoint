@@ -8,4 +8,5 @@ public interface ICommentService : IService
     Task<Result<Comment>> Add(Comment comment);
     Task<Result<Comment>> Update(Comment comment);
     Task<Result> Delete(int id);
+    Task<Result> CanUserDelete(int userId, int commentId);
 }

@@ -42,4 +42,21 @@ public class AccountController : ControllerBase
         var result = await _commentService.Add(comment);
         return this.ToActionResult<Comment, CommentDto>(result, _mapper);
     }
+
+    [HttpDelete("comment/{id:int}")]
+    public async Task<IActionResult> DeleteComment(int id)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        if (email == null) return Unauthorized();
+        
+        var user = await _userService.GetByEmail(email);
+        if (user == null) return Unauthorized();
+        
+        var canDelete = await _commentService.CanUserDelete(user.Id, id);
+        if (!canDelete.Success)
+            return this.ToActionResult(canDelete);
+        
+        var result = await _commentService.Delete(id);
+        return this.ToActionResult(result);
+    }
 }

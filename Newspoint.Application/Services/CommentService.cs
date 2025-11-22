@@ -85,4 +85,17 @@ public class CommentService : ICommentService
 
         return Result.Ok();
     }
+
+    public async Task<Result> CanUserDelete(int userId, int commentId)
+    {
+        var comment = await _commentRepository.GetById(commentId);
+        if (comment == null) 
+            return Result.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
+        
+        var user = await _userRepository.GetById(userId);
+        if (user == null || !(user.Role == Role.Admin || user.Id == comment.AuthorId)) 
+            return Result.Error(ResultErrorType.UnknownError, ServiceMessages.Error);
+        
+        return Result.Ok();
+    }
 }
