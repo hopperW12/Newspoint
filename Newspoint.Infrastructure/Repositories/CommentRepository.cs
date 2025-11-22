@@ -49,4 +49,14 @@ public class CommentRepository : ICommentRepository
         await _dataDbContext.SaveChangesAsync();
         return true;
     }
+
+    public async Task<ICollection<Comment>> GetUserComments(int userId)
+    {
+        var comments = _dataDbContext.Comments
+            .Where(e => e.AuthorId == userId)
+            .Include(e => e.Author)
+            .Include(e => e.Article)
+            .ToListAsync();
+        return await comments;
+    }
 }

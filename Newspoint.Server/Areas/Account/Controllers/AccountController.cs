@@ -27,6 +27,19 @@ public class AccountController : ControllerBase
         _mapper = mapper;
     }
 
+    [HttpGet("comments")]
+    public async Task<IActionResult> GetComments()
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        if (email == null) return Unauthorized();
+        
+        var user = await _userService.GetByEmail(email);
+        if (user == null) return Unauthorized();
+        
+        var comments = await _commentService.GetUserComments(user.Id);
+        return Ok(_mapper.Map<IEnumerable<CommentDto>>(comments));
+    }
+
     [HttpPost("comment")]
     public async Task<IActionResult> AddComment([FromBody] CommentCreateDto commentDto)
     {

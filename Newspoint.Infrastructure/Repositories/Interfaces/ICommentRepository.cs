@@ -9,4 +9,6 @@ public interface ICommentRepository : IRepository
     Task<Comment?> Add(Comment entity);
     Task<Comment?> Update(Comment entity);
     Task<bool> Delete(int id);
+    
+    Task<ICollection<Comment>> GetUserComments(int userId);
 }

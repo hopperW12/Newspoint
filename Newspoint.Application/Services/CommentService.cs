@@ -86,6 +86,11 @@ public class CommentService : ICommentService
         return Result.Ok();
     }
 
+    public Task<ICollection<Comment>> GetUserComments(int userId)
+    {
+        return _commentRepository.GetUserComments(userId);
+    }
+
     public async Task<Result> CanUserDelete(int userId, int commentId)
     {
         var comment = await _commentRepository.GetById(commentId);
