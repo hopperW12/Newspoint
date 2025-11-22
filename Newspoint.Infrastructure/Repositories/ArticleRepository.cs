@@ -70,4 +70,14 @@ public class ArticleRepository : IArticleRepository
 
         return true;
     }
+
+    public async Task<ICollection<Article>> GetUserArticles(int userId)
+    {
+        var articles = _dataDbContext.Articles
+            .Where(e => e.AuthorId == userId)
+            .Include(e => e.Author)
+            .Include(e => e.Category)
+            .ToListAsync();
+        return await articles;
+    }
 }

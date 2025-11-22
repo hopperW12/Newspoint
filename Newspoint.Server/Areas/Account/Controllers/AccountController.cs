@@ -18,12 +18,18 @@ public class AccountController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly ICommentService _commentService;
+    private readonly IArticleService _articleService;
     private readonly IMapper _mapper;
 
-    public AccountController(IUserService userService, ICommentService commentService, IMapper mapper)
+    public AccountController(
+        IUserService userService,
+        ICommentService commentService,
+        IArticleService articleService,
+        IMapper mapper)
     {
         _userService = userService;
         _commentService = commentService;
+        _articleService = articleService;
         _mapper = mapper;
     }
 
@@ -71,5 +77,18 @@ public class AccountController : ControllerBase
         
         var result = await _commentService.Delete(id);
         return this.ToActionResult(result);
+    }
+
+    [HttpGet("articles")]
+    public async Task<IActionResult> GetArticles()
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        if (email == null) return Unauthorized();
+        
+        var user = await _userService.GetByEmail(email);
+        if (user == null) return Unauthorized();
+        
+        var articles = await _articleService.GetUserArticles(user.Id);
+        return Ok(_mapper.Map<IEnumerable<ArticleDto>>(articles));
     }
 }

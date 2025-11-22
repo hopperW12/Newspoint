@@ -104,4 +104,9 @@ public class ArticleService : IArticleService
 
         return Result.Ok();
     }
+
+    public Task<ICollection<Article>> GetUserArticles(int userId)
+    {
+        return _articleRepository.GetUserArticles(userId);
+    }
 }
