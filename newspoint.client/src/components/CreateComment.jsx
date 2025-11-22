@@ -8,7 +8,7 @@ const CreateComment = ({ onSubmit }) => {
     if (!text.trim()) return;
 
     onSubmit(text);
-    setText(""); // clear textarea
+    setText("");
   };
 
   return (
