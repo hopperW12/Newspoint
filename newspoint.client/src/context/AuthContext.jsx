@@ -32,7 +32,10 @@ export const AuthProvider = ({ children }) => {
   }, [jwt]);
 
   const login = (newJwt) => setJwt(newJwt);
-  const logout = () => setJwt(null);
+  const logout = () => {
+    setJwt(null);
+    location.reload();
+  };
 
   return (
     <AuthContext.Provider value={{ jwt, user, login, logout }}>

@@ -4,6 +4,7 @@ import Navbar from "../components/Navbar";
 import defaultArticleImg from "../assets/images/default_article_img.png";
 import CreateComment from "../components/CreateComment";
 import { AuthContext } from "../context/AuthContext";
+import { TiDelete } from "react-icons/ti";
 import "../assets/styles/pages/ArticleDetail.css";
 
 const ArticleDetail = () => {
@@ -14,6 +15,7 @@ const ArticleDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Nacteni detailu clanku
   useEffect(() => {
     const fetchArticle = async () => {
       try {
@@ -33,18 +35,21 @@ const ArticleDetail = () => {
     fetchArticle();
   }, [id]);
 
+  // Pridavani komentaru
   const handleAddComment = async (content) => {
     try {
       const storedJwt = localStorage.getItem("jwt");
 
-      // TODO: Make this work on the current backend
-      const res = await fetch(`/api/admin/Comment/${article.id}/comments`, {
+      const res = await fetch("/api/account/comment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${storedJwt}`,
         },
-        body: JSON.stringify({ content }),
+        body: JSON.stringify({
+          Content: content,
+          ArticleId: id,
+        }),
       });
 
       if (!res.ok) throw new Error("Nepodařilo se přidat komentář");
@@ -53,10 +58,31 @@ const ArticleDetail = () => {
       const savedComment = await res.json();
 
       // přidání nového komentáře do local state, aby se okamžitě zobrazil
-      setComments([savedComment, ...comments]);
+      setComments([savedComment.data, ...comments]);
     } catch (err) {
       console.error(err);
       alert("Došlo k problému při tvorbě komentáře.");
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    try {
+      const storedJwt = localStorage.getItem("jwt");
+
+      const res = await fetch(`/api/account/comment/${commentId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${storedJwt}`,
+        },
+      });
+
+      if (!res.ok) throw new Error("Komentář se nepodařilo smazat");
+
+      // Odstranit komentář z frontendu
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
     }
   };
 
@@ -98,7 +124,7 @@ const ArticleDetail = () => {
 
         <h2 className="article-detail-comments-title">Komentáře</h2>
 
-        {/* NEW: only show comment form if user is logged in */}
+        {/* ukaz comment form jen pokud je uzivatel prihlaseny */}
         {user && <CreateComment onSubmit={handleAddComment} />}
 
         <div className="article-detail-comments-wrap">
@@ -106,19 +132,29 @@ const ArticleDetail = () => {
             <div className="article-detail-comment" key={comment.id}>
               <div className="article-detail-comment-header">
                 <div className="article-detail-comment-author">
-                  {comment.author}
+                  <p>{comment.author}</p>
                 </div>
                 <div className="article-detail-comment-date">
-                  {new Date(comment.publishedAt)
-                    .toLocaleString("cs-CZ", {
-                      year: "numeric",
-                      month: "2-digit",
-                      day: "2-digit",
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })
-                    .split(". ")
-                    .join(".")}
+                  <p>
+                    {new Date(comment.publishedAt)
+                      .toLocaleString("cs-CZ", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                      .split(". ")
+                      .join(".")}
+                  </p>
+                  {comment.authorId == +user.nameid && (
+                    <button
+                      onClick={() => handleDeleteComment(comment.id)}
+                      className="article-detail-comment-delete-btn"
+                    >
+                      <TiDelete />
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="article-detail-comment-content">
