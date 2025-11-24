@@ -8,7 +8,7 @@ public class CommentProfile : Profile
 {
     public CommentProfile()
     {
-        CreateMap<CommentCreateDto, Comment>()
+        CreateMap<AccountCommentCreateDto, Comment>()
             .ForMember(dest => dest.Author, opt => opt.Ignore())
             .ForMember(dest => dest.Article, opt => opt.Ignore());
     }

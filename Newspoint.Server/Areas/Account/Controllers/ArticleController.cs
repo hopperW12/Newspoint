@@ -44,7 +44,7 @@ public class ArticleController : ControllerBase
     }
     
     [HttpPost("article")]
-    public async Task<IActionResult> AddArticle([FromBody] ArticleCreateDto articleDto)
+    public async Task<IActionResult> AddArticle([FromBody] AccountArticleCreateDto accountArticleDto)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
@@ -52,7 +52,7 @@ public class ArticleController : ControllerBase
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
         
-        var article = _mapper.Map<Article>(articleDto);
+        var article = _mapper.Map<Article>(accountArticleDto);
         article.AuthorId = user.Id;
         
         var result = await _articleService.Add(article);

@@ -44,7 +44,7 @@ public class CommentController : ControllerBase
     }
 
     [HttpPost("comment")]
-    public async Task<IActionResult> AddComment([FromBody] CommentCreateDto commentDto)
+    public async Task<IActionResult> AddComment([FromBody] AccountCommentCreateDto accountCommentDto)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
@@ -52,7 +52,7 @@ public class CommentController : ControllerBase
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
         
-        var comment = _mapper.Map<Comment>(commentDto);
+        var comment = _mapper.Map<Comment>(accountCommentDto);
         comment.AuthorId = user.Id;
         
         var result = await _commentService.Add(comment);
