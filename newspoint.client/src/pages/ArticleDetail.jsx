@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import Navbar from "../components/Navbar";
 import defaultArticleImg from "../assets/images/default_article_img.png";
@@ -22,9 +22,9 @@ const ArticleDetail = () => {
         const res = await fetch(`/api/Article/${id}`);
         if (!res.ok) throw new Error("Failed to fetch article");
 
-        const article = await res.json();
-        setArticle(article.data);
-        setComments(article.data.comments || []);
+        const articleData = await res.json();
+        setArticle(articleData.data);
+        setComments(articleData.data.comments || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -54,10 +54,7 @@ const ArticleDetail = () => {
 
       if (!res.ok) throw new Error("Nepodařilo se přidat komentář");
 
-      // backend vrátí nový koment
       const savedComment = await res.json();
-
-      // přidání nového komentáře do local state, aby se okamžitě zobrazil
       setComments([savedComment.data, ...comments]);
     } catch (err) {
       console.error(err);
@@ -78,7 +75,6 @@ const ArticleDetail = () => {
 
       if (!res.ok) throw new Error("Komentář se nepodařilo smazat");
 
-      // Odstranit komentář z frontendu
       setComments((prev) => prev.filter((c) => c.id !== commentId));
     } catch (err) {
       console.error(err);
@@ -94,7 +90,22 @@ const ArticleDetail = () => {
     <>
       <Navbar />
       <div className="article-detail">
-        <h2 className="article-detail-title">{article.title}</h2>
+        <div className="article-detail-header">
+          <h2 className="article-detail-title">{article.title}</h2>
+
+          {/* Odkaz na editaci článku */}
+          {user &&
+            (user.role === "Admin" || user.role === "Editor") &&
+            user.nameid == article.authorId && (
+              <Link
+                className="article-edit-link"
+                to={`/edit-article/${article.id}`}
+              >
+                Upravit článek →
+              </Link>
+            )}
+        </div>
+
         <div className="article-detail-author-wrap">
           <div className="article-detail-author-circle">
             {article.author
@@ -117,6 +128,7 @@ const ArticleDetail = () => {
               .join(".")}
           </p>
         </div>
+
         <p className="article-detail-category">{article.category}</p>
         <img className="article-detail-img" src={defaultArticleImg} alt="" />
         <p className="article-detail-text">{article.content}</p>
@@ -124,7 +136,6 @@ const ArticleDetail = () => {
 
         <h2 className="article-detail-comments-title">Komentáře</h2>
 
-        {/* ukaz comment form jen pokud je uzivatel prihlaseny */}
         {user && <CreateComment onSubmit={handleAddComment} />}
 
         <div className="article-detail-comments-wrap">
@@ -147,7 +158,7 @@ const ArticleDetail = () => {
                       .split(". ")
                       .join(".")}
                   </p>
-                  {comment.authorId == +user.nameid && (
+                  {user && comment.authorId == +user.nameid && (
                     <button
                       onClick={() => handleDeleteComment(comment.id)}
                       className="article-detail-comment-delete-btn"

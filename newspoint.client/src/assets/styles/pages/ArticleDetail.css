@@ -11,6 +11,17 @@
   font-size: 38px;
 }
 
+.article-edit-link {
+  display: inline-block;
+  color: #2563eb;
+  text-decoration: none;
+  margin: 10px 0;
+}
+
+.article-edit-link:hover {
+  text-decoration: underline;
+}
+
 .article-detail-author-wrap {
   display: flex;
   align-items: center;

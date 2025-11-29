@@ -2,7 +2,7 @@
 
 .user-page-container {
   max-width: 800px;
-  margin: 50px auto;
+  margin: 30px auto;
   padding: 20px;
 }
 
@@ -31,9 +31,27 @@
   border: 1px solid #ccc;
   font-size: 14px;
   resize: none;
+  outline: none;
+}
+
+.user-page-form-inputarea {
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  height: 250px;
+  resize: none;
+  outline: none;
+}
+
+.user-page-form-label {
+  font-size: 15px;
+  margin: 6px 0;
 }
 
 .user-page-form-btn {
+  margin-top: 5px;
   padding: 10px;
   background-color: #007bff;
   color: white;
@@ -124,7 +142,7 @@
 
 .editor-sections-title {
   font-size: 22px;
-  margin-bottom: 20px;
+  margin: 40px 0 20px 0;
   color: #333;
 }
 
@@ -165,6 +183,12 @@
   color: #666;
 }
 
+.editor-article-author {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #666;
+}
+
 .editor-noarticles-text {
   margin-top: 10px;
 }
@@ -196,10 +220,6 @@
   flex-direction: column;
   gap: 20px;
   margin-top: 10px;
-}
-
-#editor-sections-my-comments-title {
-  margin-top: 20px;
 }
 
 .article-detail-comment {

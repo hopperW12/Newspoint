@@ -1,9 +1,41 @@
+/* =============== Kategorie =============== */
+.homepage-categories-wrap {
+  margin: 25px auto;
+  width: 1100px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.category-pill {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background-color: #f3f3f3;
+  border: 1px solid #d0d0d0;
+  cursor: pointer;
+  user-select: none;
+  font-size: 15px;
+  transition: all 0.2s ease;
+  color: #333;
+}
+
+.category-pill:hover {
+  background-color: #0066ffad;
+  color: #fff;
+}
+
+.category-pill.active {
+  background-color: #0066ff;
+  border-color: #0066ff;
+  color: white;
+}
+
+/* =============== Clanky =============== */
 .articles-wrap {
   width: 1100px;
   margin: 30px auto 0 auto;
 }
 
-/* Article card */
 .article-card {
   width: 800px;
   margin: 30px auto;
@@ -14,7 +46,6 @@
   line-height: 1.6;
 }
 
-/* Title Section */
 .article-title-wrap {
   display: flex;
 }
@@ -70,10 +101,12 @@
 
 /* Responsive */
 @media (max-width: 1100px) {
+  .homepage-categories-wrap {
+    width: 95%;
+  }
   .articles-wrap {
     width: 95%;
   }
-
   .article-card {
     width: 100%;
   }
