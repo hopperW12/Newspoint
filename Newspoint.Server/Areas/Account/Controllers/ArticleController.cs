@@ -14,69 +14,20 @@ namespace Newspoint.Server.Areas.Account.Controllers;
 [ApiController]
 [Area("account")]
 [Route("api/[area]")]
-public class AccountController : ControllerBase
+public class ArticleController : ControllerBase
 {
     private readonly IUserService _userService;
-    private readonly ICommentService _commentService;
     private readonly IArticleService _articleService;
     private readonly IMapper _mapper;
 
-    public AccountController(
+    public ArticleController(
         IUserService userService,
-        ICommentService commentService,
         IArticleService articleService,
         IMapper mapper)
     {
         _userService = userService;
-        _commentService = commentService;
         _articleService = articleService;
         _mapper = mapper;
-    }
-
-    [HttpGet("comments")]
-    public async Task<IActionResult> GetComments()
-    {
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        if (email == null) return Unauthorized();
-        
-        var user = await _userService.GetByEmail(email);
-        if (user == null) return Unauthorized();
-        
-        var comments = await _commentService.GetUserComments(user.Id);
-        return Ok(_mapper.Map<IEnumerable<CommentDto>>(comments));
-    }
-
-    [HttpPost("comment")]
-    public async Task<IActionResult> AddComment([FromBody] CommentCreateDto commentDto)
-    {
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        if (email == null) return Unauthorized();
-        
-        var user = await _userService.GetByEmail(email);
-        if (user == null) return Unauthorized();
-        
-        var comment = _mapper.Map<Comment>(commentDto);
-        comment.AuthorId = user.Id;
-        
-        var result = await _commentService.Add(comment);
-        return this.ToActionResult<Comment, CommentDto>(result, _mapper);
-    }
-
-    [HttpDelete("comment/{id:int}")]
-    public async Task<IActionResult> DeleteComment(int id)
-    {
-        var email = User.FindFirstValue(ClaimTypes.Email);
-        if (email == null) return Unauthorized();
-        
-        var user = await _userService.GetByEmail(email);
-        if (user == null) return Unauthorized();
-        
-        var canDelete = await _commentService.CanUserDelete(user.Id, id);
-        if (!canDelete.Success)
-            return this.ToActionResult(canDelete);
-        
-        var result = await _commentService.Delete(id);
-        return this.ToActionResult(result);
     }
 
     [HttpGet("articles")]
@@ -90,5 +41,38 @@ public class AccountController : ControllerBase
         
         var articles = await _articleService.GetUserArticles(user.Id);
         return Ok(_mapper.Map<IEnumerable<ArticleDto>>(articles));
+    }
+    
+    [HttpPost("article")]
+    public async Task<IActionResult> AddArticle([FromBody] AccountArticleCreateDto accountArticleDto)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        if (email == null) return Unauthorized();
+        
+        var user = await _userService.GetByEmail(email);
+        if (user == null) return Unauthorized();
+        
+        var article = _mapper.Map<Article>(accountArticleDto);
+        article.AuthorId = user.Id;
+        
+        var result = await _articleService.Add(article);
+        return this.ToActionResult<Article, ArticleDto>(result, _mapper);
+    }
+    
+    [HttpDelete("article/{id:int}")]
+    public async Task<IActionResult> DeleteArticle(int id)
+    {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        if (email == null) return Unauthorized();
+        
+        var user = await _userService.GetByEmail(email);
+        if (user == null) return Unauthorized();
+        
+        var canDelete = await _articleService.CanUserDelete(user.Id, id);
+        if (!canDelete.Success)
+            return this.ToActionResult(canDelete);
+        
+        var result = await _articleService.Delete(id);
+        return this.ToActionResult(result);
     }
 }

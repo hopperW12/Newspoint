@@ -109,4 +109,17 @@ public class ArticleService : IArticleService
     {
         return _articleRepository.GetUserArticles(userId);
     }
+
+    public async Task<Result> CanUserDelete(int userId, int articleId)
+    {
+        var article = await _articleRepository.GetById(articleId);
+        if (article == null) 
+            return Result.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
+        
+        var user = await _userRepository.GetById(userId);
+        if (user == null || !(user.Role == Role.Admin || user.Id == article.AuthorId)) 
+            return Result.Error(ResultErrorType.UnknownError, ServiceMessages.Error);
+        
+        return Result.Ok();
+    }
 }
