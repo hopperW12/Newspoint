@@ -128,9 +128,7 @@ const EditorBoard = () => {
             <div className="article-detail-comment" key={c.id}>
               <div className="article-detail-comment-header">
                 <div className="article-detail-comment-author">
-                  <p>
-                    {c.author} {console.log(c)}
-                  </p>
+                  <p>{c.author}</p>
                 </div>
                 <div className="article-detail-comment-date">
                   <p>
