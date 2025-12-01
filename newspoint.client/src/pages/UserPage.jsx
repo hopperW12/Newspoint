@@ -13,27 +13,56 @@ const UserPage = () => {
 
   const [articles, setArticles] = useState([]);
   const [error, setError] = useState(null);
-
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
+  const [newImage, setNewImage] = useState(null);
+  const [endpointURL, setEndpointURL] = useState("");
+
   const { role } = user;
+
+  useEffect(() => {
+    if (!user) return;
+
+    switch (user.role) {
+      case "Admin":
+        setEndpointURL(`/api/admin/Article`);
+        break;
+
+      case "Editor":
+        setEndpointURL(`/api/account/article`);
+        break;
+
+      default:
+        setEndpointURL(""); // Reader nemůže vytvářet články
+    }
+  }, [user]);
 
   const handleCreate = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await fetch(`/api/users/${user.id}/articles`, {
+      const formData = new FormData();
+      formData.append("title", newTitle);
+      formData.append("content", newContent);
+
+      if (newImage) {
+        formData.append("image", newImage);
+      }
+
+      const res = await fetch(endpointURL, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: JSON.stringify({ title: newTitle, content: newContent }),
+        headers: { Authorization: `Bearer ${jwt}` },
+        body: formData,
       });
+
       if (!res.ok) throw new Error("Chyba při vytváření článku");
+
       const created = await res.json();
+
       setArticles([...articles, created]);
       setNewTitle("");
       setNewContent("");
+      setNewImage(null);
     } catch (err) {
       alert(err.message);
     }
@@ -77,9 +106,18 @@ const UserPage = () => {
               <textarea
                 placeholder="Obsah článku"
                 value={newContent}
-                className="user-page-form-input"
+                className="user-page-form-inputarea"
                 onChange={(e) => setNewContent(e.target.value)}
                 required
+              />
+              <label className="user-page-form-label">
+                Nahrajte obrázek ke článku
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                className="user-page-form-input"
+                onChange={(e) => setNewImage(e.target.files[0])}
               />
               <div className="user-page-form-btn-wrap">
                 <button className="user-page-form-btn" type="submit">

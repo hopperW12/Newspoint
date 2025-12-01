@@ -50,7 +50,7 @@ const EditorBoard = () => {
   const handleDeleteArticle = async (id) => {
     if (!window.confirm("Opravdu chcete smazat tento článek?")) return;
     try {
-      const res = await fetch(`/api/account/articles/${id}`, {
+      const res = await fetch(`/api/account/article/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${jwt}` },
       });
@@ -116,21 +116,14 @@ const EditorBoard = () => {
       </div>
 
       <div className="editor-section">
-        <h4
-          className="editor-sections-title"
-          id="editor-sections-my-comments-title"
-        >
-          Moje komentáře
-        </h4>
+        <h4 className="editor-sections-title">Moje komentáře</h4>
         {comments.length === 0 && <p>Ještě nejsou žádné komentáře. 📝</p>}
         <div className="article-detail-comments-wrap">
           {comments.map((c) => (
             <div className="article-detail-comment" key={c.id}>
               <div className="article-detail-comment-header">
                 <div className="article-detail-comment-author">
-                  <p>
-                    {c.author} {console.log(c)}
-                  </p>
+                  <p>{c.author}</p>
                 </div>
                 <div className="article-detail-comment-date">
                   <p>
