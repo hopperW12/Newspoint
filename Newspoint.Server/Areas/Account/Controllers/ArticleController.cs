@@ -30,7 +30,7 @@ public class ArticleController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("articles")]
+    [HttpGet]
     public async Task<IActionResult> GetArticles()
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
@@ -43,7 +43,7 @@ public class ArticleController : ControllerBase
         return Ok(_mapper.Map<IEnumerable<ArticleDto>>(articles));
     }
     
-    [HttpPost("article")]
+    [HttpPost]
     public async Task<IActionResult> AddArticle([FromBody] AccountArticleCreateDto accountArticleDto)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
@@ -59,7 +59,7 @@ public class ArticleController : ControllerBase
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
     
-    [HttpDelete("article/{id:int}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArticle(int id)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);

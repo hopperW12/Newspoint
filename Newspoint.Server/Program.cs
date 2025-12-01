@@ -19,7 +19,14 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
+builder.Services.AddRouting(options =>
+{
+    options.LowercaseUrls = true;
+});
+
+
 builder.Services.AddNewspointSwagger();
+
 
 var app = builder.Build();
 

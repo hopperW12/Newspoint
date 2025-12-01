@@ -30,7 +30,7 @@ public class CommentController : ControllerBase
         _mapper = mapper;
     }
 
-    [HttpGet("comments")]
+    [HttpGet]
     public async Task<IActionResult> GetComments()
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
@@ -43,7 +43,7 @@ public class CommentController : ControllerBase
         return Ok(_mapper.Map<IEnumerable<CommentDto>>(comments));
     }
 
-    [HttpPost("comment")]
+    [HttpPost]
     public async Task<IActionResult> AddComment([FromBody] AccountCommentCreateDto accountCommentDto)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
@@ -59,7 +59,7 @@ public class CommentController : ControllerBase
         return this.ToActionResult<Comment, CommentDto>(result, _mapper);
     }
 
-    [HttpDelete("comment/{id:int}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteComment(int id)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
