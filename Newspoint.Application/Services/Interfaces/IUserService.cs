@@ -4,7 +4,9 @@ namespace Newspoint.Application.Services.Interfaces;
 
 public interface IUserService : IService
 {
+    Task<ICollection<User>> GetAll();
     Task<User?> GetByEmail(string email);
-    Task<Result> Register(User entity);
+    Task<Result<User>> Add(User entity);
+    Task<Result<User>> Update(User entity);
     Task<bool> Delete(int id);
 }

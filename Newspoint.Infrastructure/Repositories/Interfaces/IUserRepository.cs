@@ -5,8 +5,10 @@ namespace Newspoint.Infrastructure.Repositories.Interfaces;
 
 public interface IUserRepository : IRepository
 {
-    public Task<User?> GetById(int id);
+    Task<ICollection<User>> GetAll();
+    Task<User?> GetById(int id);
     Task<User?> GetByEmail(string email);
-    Task<User?> Add(User user);
+    Task<User?> Add(User entity);
+    Task<User?> Update(User entity);
     Task<bool> Delete(int id);
 }

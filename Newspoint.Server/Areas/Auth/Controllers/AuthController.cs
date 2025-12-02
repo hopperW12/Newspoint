@@ -55,7 +55,7 @@ public class AuthController : ControllerBase
         // Hash password
         newUser.Password = PasswordHasher.HashPassword(userRegisterDto.Password);
         
-        var result = await _userService.Register(newUser);
+        var result = await _userService.Add(newUser);
         if (!result.Success) 
             return this.ToActionResult(result);
         

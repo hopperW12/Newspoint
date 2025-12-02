@@ -22,4 +22,5 @@ public static class ServiceMessages
     // User
     public const string UserEmailExist = "Tento email je již zaregistrovany.";
     public const string UserRegisterError = "Nastala chyba.";
+    public const string UserNotFound = "Tento uživatel nebyl nalezen.";
 }

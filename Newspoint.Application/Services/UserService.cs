@@ -1,6 +1,5 @@
 ﻿using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
-using Newspoint.Infrastructure.Repositories;
 using Newspoint.Infrastructure.Repositories.Interfaces;
 
 namespace Newspoint.Application.Services;
@@ -14,26 +13,48 @@ public class UserService : IUserService
         _userRepository = userRepository;
     }
 
+    public Task<ICollection<User>> GetAll()
+    {
+        return _userRepository.GetAll();
+    }
+
     public Task<User?> GetByEmail(string email)
     {
         return _userRepository.GetByEmail(email);
     }
 
-    public async Task<Result> Register(User entity)
+    public async Task<Result<User>> Add(User entity)
     {
         var existingUser = await _userRepository.GetByEmail(entity.Email);
         if (existingUser != null)
-            return Result.Error(ResultErrorType.UnknownError, ServiceMessages.UserEmailExist);
+            return Result<User>.Error(ResultErrorType.UnknownError, ServiceMessages.UserEmailExist);
         
         entity.RegisteredAt = DateTime.Now;
         entity.Role = Role.Reader;
         
         var result = await _userRepository.Add(entity);
         if (result == null)
-            return Result.Error(ResultErrorType.UnknownError, ServiceMessages.UserRegisterError);
-        
-        return Result.Ok();
+            return Result<User>.Error(ResultErrorType.UnknownError, ServiceMessages.UserRegisterError);
+
+        return Result<User>.Ok(result);
     }
+
+    public async Task<Result<User>> Update(User entity)
+    {
+        var existingUser = await _userRepository.GetByEmail(entity.Email);
+        if (existingUser == null)
+            return Result<User>.Error(ResultErrorType.NotFound, ServiceMessages.UserNotFound);
+        
+        entity.RegisteredAt = DateTime.Now;
+        entity.Role = Role.Reader;
+        
+        var result = await _userRepository.Update(entity);
+        if (result == null)
+            return Result<User>.Error(ResultErrorType.UnknownError, ServiceMessages.Error);
+
+        return Result<User>.Ok(result);
+    }
+    
 
     public Task<bool> Delete(int id)
     {
