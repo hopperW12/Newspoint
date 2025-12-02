@@ -13,7 +13,7 @@ namespace Newspoint.Server.Areas.Account.Controllers;
 [Authorize]
 [ApiController]
 [Area("account")]
-[Route("api/[area]")]
+[Route("api/[area]/[controller]")]
 public class CommentController : ControllerBase
 {
     private readonly IUserService _userService;
