@@ -1,5 +1,5 @@
 import { useState, useEffect, useContext } from "react";
-import { useParams, useNavigate, data, Link, redirect } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import "../assets/styles/pages/EditArticle.css";
@@ -13,6 +13,7 @@ const EditArticlePage = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
+  const [deleteImage, setDeleteImage] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,20 +24,19 @@ const EditArticlePage = () => {
         if (!res.ok) throw new Error("Chyba při načítání článku.");
         const articleData = await res.json();
 
-        // Povolit editaci pouze autorovi nebo adminovi
-
         if (
-          user.nameid != articleData.data.authorId &&
-          (user.role !== "Admin" || user.role !== "Editor")
+          user.nameid !== articleData.data.authorId &&
+          user.role !== "Admin" &&
+          user.role !== "Editor"
         ) {
           navigate(`/Articles/${id}`);
           return;
         }
 
-        // Předvyplnění inputů
         setArticle(articleData.data);
         setTitle(articleData.data.title);
         setContent(articleData.data.content);
+        setDeleteImage(false);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -48,24 +48,13 @@ const EditArticlePage = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
-
     try {
       const formData = new FormData();
 
-      // Přidáme jen změněné hodnoty
       if (title !== article.title) formData.append("title", title);
       if (content !== article.content) formData.append("content", content);
       if (image) formData.append("image", image);
-
-      // Povolit editaci pouze autorovi a zároveň Adminovi nebo Editorovi
-      if (
-        user.id !== articleData.authorId ||
-        (user.role !== "Admin" && user.role !== "Editor")
-      ) {
-        alert("Nemáte oprávnění upravovat tento článek.");
-        navigate(`/Articles/${id}`);
-        return;
-      }
+      if (deleteImage) formData.append("deleteImage", "true");
 
       const res = await fetch(`/api/account/article/${id}`, {
         method: "PUT",
@@ -109,6 +98,16 @@ const EditArticlePage = () => {
             placeholder="Obsah článku"
             required
           />
+          <div className="edit-article-delete-image-wrap">
+            <label>
+              <input
+                type="checkbox"
+                checked={deleteImage}
+                onChange={(e) => setDeleteImage(e.target.checked)}
+              />{" "}
+              Smazat aktuální obrázek
+            </label>
+          </div>
           <label>Nahrát nový obrázek (volitelné)</label>
           <input
             type="file"

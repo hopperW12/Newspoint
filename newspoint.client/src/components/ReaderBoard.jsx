@@ -13,7 +13,7 @@ const ReaderBoard = ({ user }) => {
 
     const fetchComments = async () => {
       try {
-        const res = await fetch("/api/account/comments", {
+        const res = await fetch("/api/account/comment", {
           headers: {
             Authorization: `Bearer ${jwt}`,
           },

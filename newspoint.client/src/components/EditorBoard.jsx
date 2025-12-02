@@ -17,7 +17,7 @@ const EditorBoard = () => {
 
     const fetchArticles = async () => {
       try {
-        const res = await fetch(`/api/account/articles`, {
+        const res = await fetch(`/api/account/article`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
         if (!res.ok) throw new Error("Chyba při načítání článků");
@@ -32,7 +32,7 @@ const EditorBoard = () => {
 
     const fetchComments = async () => {
       try {
-        const res = await fetch(`/api/account/comments`, {
+        const res = await fetch(`/api/account/comment`, {
           headers: { Authorization: `Bearer ${jwt}` },
         });
         if (!res.ok) throw new Error("Chyba při načítání komentářů");
