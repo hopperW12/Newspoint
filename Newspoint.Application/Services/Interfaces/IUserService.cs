@@ -8,5 +8,5 @@ public interface IUserService : IService
     Task<User?> GetByEmail(string email);
     Task<Result<User>> Add(User entity);
     Task<Result<User>> Update(User entity);
-    Task<bool> Delete(int id);
+    Task<Result> Delete(int id);
 }

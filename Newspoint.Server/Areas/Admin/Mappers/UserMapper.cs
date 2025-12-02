@@ -10,5 +10,8 @@ public class UserProfile : Profile
     {
         CreateMap<User, UserDto>()
             .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.ToString()));
+
+        CreateMap<UserCreateDto, User>();
+        CreateMap<UserUpdateDto, User>();
     }
 }

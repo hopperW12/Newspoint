@@ -56,8 +56,12 @@ public class UserService : IUserService
     }
     
 
-    public Task<bool> Delete(int id)
+    public async Task<Result> Delete(int id)
     {
-        return _userRepository.Delete(id);   
+        var deleted = await _userRepository.Delete(id);
+        if (!deleted)
+            return Result.Error(ResultErrorType.NotFound, ServiceMessages.UserNotFound);
+
+        return Result.Ok();
     }
 }
