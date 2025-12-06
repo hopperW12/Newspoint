@@ -132,7 +132,11 @@ const ArticleDetail = () => {
         </div>
 
         <p className="article-detail-category">{article.category}</p>
-        <img className="article-detail-img" src={defaultArticleImg} alt="" />
+        <img
+          className="article-detail-img"
+          src={article.imagePath || defaultArticleImg}
+          alt=""
+        />
         <p className="article-detail-text">{article.content}</p>
         <hr className="article-detail-divider" />
 
