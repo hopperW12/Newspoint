@@ -75,6 +75,9 @@ public class ArticleController : ControllerBase
         }
 
         var result = await _articleService.Add(article);
+        if (!result.Success)
+            await _articleImageService.DeleteImage(article.ImagePath);
+        
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
     
