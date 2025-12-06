@@ -82,7 +82,7 @@ public class ArticleController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateArticle(int id, [FromForm] AccountArticleUpdateDto articleDto, IFormFile? image, [FromForm] bool deleteImage = false)
+    public async Task<IActionResult> UpdateArticle([FromForm] AccountArticleUpdateDto articleDto, IFormFile? image, [FromForm] bool deleteImage = false)
     {
         var existingResult = await _articleService.GetById(articleDto.Id);
         if (!existingResult.Success || existingResult.Data == null)
