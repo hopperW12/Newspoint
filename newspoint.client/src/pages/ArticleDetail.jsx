@@ -21,7 +21,7 @@ const ArticleDetail = () => {
   useEffect(() => {
     const fetchArticle = async () => {
       try {
-        const res = await fetch(`/api/Article/${id}`);
+        const res = await fetch(`/api/article/${id}`);
         if (!res.ok) throw new Error("Failed to fetch article");
 
         const articleData = await res.json();

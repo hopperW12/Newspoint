@@ -12,30 +12,31 @@ const UserPage = () => {
   if (!user) return <p>Musíte být přihlášeni, abyste viděli tuto stránku.</p>;
 
   const [articles, setArticles] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [error, setError] = useState(null);
+
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
   const [newImage, setNewImage] = useState(null);
-  const [endpointURL, setEndpointURL] = useState("");
-
-  const { role } = user;
+  const [newCategory, setNewCategory] = useState("");
 
   useEffect(() => {
-    if (!user) return;
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("/api/category");
+        if (!res.ok) throw new Error("Nepodařilo se načíst kategorie.");
 
-    switch (user.role) {
-      case "Admin":
-        setEndpointURL(`/api/admin/article`);
-        break;
+        const data = await res.json();
+        setCategories(data);
 
-      case "Editor":
-        setEndpointURL(`/api/account/article`);
-        break;
+        console.log(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-      default:
-        setEndpointURL(""); // Reader nemůže vytvářet články
-    }
-  }, [user]);
+    fetchCategories();
+  }, []);
 
   const handleCreate = async (e) => {
     e.preventDefault();
@@ -44,12 +45,11 @@ const UserPage = () => {
       const formData = new FormData();
       formData.append("title", newTitle);
       formData.append("content", newContent);
+      formData.append("categoryId", newCategory);
 
-      if (newImage) {
-        formData.append("image", newImage);
-      }
+      if (newImage) formData.append("image", newImage);
 
-      const res = await fetch(endpointURL, {
+      const res = await fetch("/api/account/article", {
         method: "POST",
         headers: { Authorization: `Bearer ${jwt}` },
         body: formData,
@@ -63,13 +63,14 @@ const UserPage = () => {
       setNewTitle("");
       setNewContent("");
       setNewImage(null);
+      setNewCategory("");
     } catch (err) {
       alert(err.message);
     }
   };
 
   const renderBoard = () => {
-    switch (role) {
+    switch (user.role) {
       case "Reader":
         return <ReaderBoard user={user} />;
       case "Editor":
@@ -77,57 +78,71 @@ const UserPage = () => {
       case "Admin":
         return <AdminBoard user={user} />;
       default:
-        return <p>Neznámá role: {role}</p>;
+        return <p>Neznámá role: {user.role}</p>;
     }
   };
-
-  // if (loading) return <p>Načítám...</p>;
-  if (error) return <p>Chyba: {error}</p>;
 
   return (
     <>
       <Navbar />
+
       <div className="user-page-container">
         <h2 className="user-page-title">Můj profil - {user.unique_name}</h2>
 
-        {/* Pridavani clanku */}
-        {(user.role == "Editor" || user.role == "Admin") && (
-          <div className="user-page-form-wrap">
-            <h2 className="user-page-form-title">Vytvořte článek</h2>
-            <form className="user-page-form" onSubmit={handleCreate}>
+        {(user.role === "Editor" || user.role === "Admin") && (
+          <div className="admin-create-article-box">
+            <h2 className="admin-create-article-title">Vytvořit nový článek</h2>
+
+            <form className="admin-create-article-form" onSubmit={handleCreate}>
               <input
                 type="text"
                 placeholder="Nadpis článku"
+                className="admin-create-article-input"
                 value={newTitle}
-                className="user-page-form-input"
                 onChange={(e) => setNewTitle(e.target.value)}
                 required
               />
+
               <textarea
                 placeholder="Obsah článku"
+                className="admin-create-article-textarea"
                 value={newContent}
-                className="user-page-form-inputarea"
                 onChange={(e) => setNewContent(e.target.value)}
                 required
               />
-              <label className="user-page-form-label">
-                Nahrajte obrázek ke článku
+
+              <label className="admin-create-article-label">Kategorie</label>
+              <select
+                className="admin-create-article-select"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                required
+              >
+                <option value="">Vyberte kategorii...</option>
+                {categories.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+
+              <label className="admin-create-article-label">
+                Obrázek (volitelně)
               </label>
               <input
                 type="file"
                 accept="image/*"
-                className="user-page-form-input"
+                className="admin-create-article-input"
                 onChange={(e) => setNewImage(e.target.files[0])}
               />
-              <div className="user-page-form-btn-wrap">
-                <button className="user-page-form-btn" type="submit">
-                  Vytvořit nový článek
-                </button>
-              </div>
+
+              <button className="admin-create-article-btn" type="submit">
+                Vytvořit článek
+              </button>
             </form>
           </div>
         )}
-        <h2 className="user-page-board-title">Rozhraní</h2>
+
         {renderBoard()}
       </div>
     </>
