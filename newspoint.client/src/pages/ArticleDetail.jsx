@@ -15,6 +15,8 @@ const ArticleDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  console.log(article);
+
   // Nacteni detailu clanku
   useEffect(() => {
     const fetchArticle = async () => {

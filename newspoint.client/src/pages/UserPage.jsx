@@ -25,7 +25,7 @@ const UserPage = () => {
 
     switch (user.role) {
       case "Admin":
-        setEndpointURL(`/api/admin/Article`);
+        setEndpointURL(`/api/admin/article`);
         break;
 
       case "Editor":
