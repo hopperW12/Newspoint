@@ -1,14 +1,19 @@
 .edit-article-container {
   max-width: 800px;
   margin: 50px auto;
-  padding: 20px;
+  padding: 25px 20px;
   border: 1px solid #ccc;
   border-radius: 10px;
+  background-color: #fafafa;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .edit-article-title {
   text-align: center;
   margin-bottom: 20px;
+  font-size: 28px;
+  font-weight: 600;
+  color: #222;
 }
 
 .edit-article-back-link {
@@ -16,6 +21,7 @@
   margin-bottom: 20px;
   color: #2563eb;
   text-decoration: none;
+  font-size: 14px;
 }
 
 .edit-article-back-link:hover {
@@ -29,12 +35,15 @@
 }
 
 .edit-article-form input[type="text"],
-.edit-article-form textarea {
+.edit-article-form textarea,
+.edit-article-form select {
   padding: 10px;
   font-size: 15px;
   border-radius: 6px;
   border: 1px solid #ccc;
   outline: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .edit-article-form textarea {
@@ -45,16 +54,45 @@
 .edit-article-form label {
   font-size: 14px;
   font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.edit-article-delete-image-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+
+.edit-article-delete-image-wrap input[type="checkbox"] {
+  position: relative;
+  top: 2px;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.edit-article-form select {
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 15px;
+  cursor: pointer;
 }
 
 .edit-article-form button {
-  padding: 10px;
+  padding: 12px;
   border-radius: 6px;
   border: none;
   background-color: #0066ff;
   color: white;
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .edit-article-form button:hover {
@@ -64,5 +102,6 @@
 @media (max-width: 850px) {
   .edit-article-container {
     max-width: 95%;
+    padding: 20px 15px;
   }
 }

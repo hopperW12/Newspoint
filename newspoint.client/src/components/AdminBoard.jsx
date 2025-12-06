@@ -78,28 +78,37 @@ const AdminBoard = () => {
     }
   };
 
-  const handleToggleRole = async (userId, currentRole) => {
+  const handleToggleRole = async (userId) => {
     try {
-      const newRole = currentRole === "Reader" ? "Editor" : "Reader";
+      // Najdi upravovaného uživatele
+      const target = users.find((u) => u.id === userId);
+      if (!target) return alert("Uživatel nenalezen.");
 
-      const res = await fetch(`/api/admin/user/${userId}/role`, {
+      // Urči novou roli (Reader -> Editor, Editor -> Reader)
+      const newRoleName = target.roleName === "Reader" ? "Editor" : "Reader";
+      const newRoleValue = newRoleName === "Editor" ? 2 : 1;
+
+      // Sestav celý nový objekt uživatele
+      const updatedUser = {
+        ...target,
+        role: newRoleValue,
+        roleName: newRoleName,
+      };
+
+      // Pošli celý objekt do backendu
+      const res = await fetch(`/api/admin/user`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${jwt}`,
         },
-        body: JSON.stringify({ role: newRole }),
+        body: JSON.stringify(updatedUser),
       });
 
       if (!res.ok) throw new Error("Chyba při změně role uživatele");
 
-      setUsers(
-        users.map((u) =>
-          u.id === userId
-            ? { ...u, roleName: newRole, role: newRole === "Editor" ? 2 : 1 }
-            : u
-        )
-      );
+      // Aktualizuj frontend rovnou, aby se změna projevila ihned
+      setUsers(users.map((u) => (u.id === userId ? updatedUser : u)));
     } catch (err) {
       alert(err.message);
     }
