@@ -36,4 +36,8 @@
     <ProjectReference Include="..\Newspoint.Infrastructure\Newspoint.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot/images/articles/"/>
+  </ItemGroup>
+
 </Project>
