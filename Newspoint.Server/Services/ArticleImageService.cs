@@ -13,7 +13,7 @@ public class ArticleImageService : IArticleImageService
         _environment = environment;
     }
 
-    public async Task<string?> SaveImageAsync(string fileName, string contentType, Stream content)
+    public async Task<string?> SaveImage(string fileName, string contentType, Stream content)
     {
         if (content == null || !content.CanRead)
             return null;
@@ -43,7 +43,7 @@ public class ArticleImageService : IArticleImageService
         return $"/images/articles/{uniqueFileName}";
     }
 
-    public Task DeleteImageAsync(string? imagePath)
+    public Task DeleteImage(string? imagePath)
     {
         if (string.IsNullOrWhiteSpace(imagePath))
             return Task.CompletedTask;
@@ -60,9 +60,9 @@ public class ArticleImageService : IArticleImageService
         return Task.CompletedTask;
     }
 
-    public async Task<string?> ReplaceImageAsync(string? oldPath, string fileName, string contentType, Stream content)
+    public async Task<string?> ReplaceImage(string? oldPath, string fileName, string contentType, Stream content)
     {
-        await DeleteImageAsync(oldPath);
-        return await SaveImageAsync(fileName, contentType, content);
+        await DeleteImage(oldPath);
+        return await SaveImage(fileName, contentType, content);
     }
 }

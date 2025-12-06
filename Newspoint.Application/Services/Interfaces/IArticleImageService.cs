@@ -2,7 +2,7 @@
 
 public interface IArticleImageService
 {
-    Task<string?> SaveImageAsync(string fileName, string contentType, Stream content);
-    Task DeleteImageAsync(string? imagePath);
-    Task<string?> ReplaceImageAsync(string? oldPath, string fileName, string contentType, Stream content);
+    Task<string?> SaveImage(string fileName, string contentType, Stream content);
+    Task DeleteImage(string? imagePath);
+    Task<string?> ReplaceImage(string? oldPath, string fileName, string contentType, Stream content);
 }

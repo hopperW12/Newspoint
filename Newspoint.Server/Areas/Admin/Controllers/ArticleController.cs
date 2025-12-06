@@ -36,7 +36,7 @@ public class ArticleController : ControllerBase
             try
             {
                 await using var stream = image.OpenReadStream();
-                article.ImagePath = await _articleImageService.SaveImageAsync(
+                article.ImagePath = await _articleImageService.SaveImage(
                     image.FileName,
                     image.ContentType,
                     stream);
@@ -64,7 +64,7 @@ public class ArticleController : ControllerBase
 
         if (deleteImage)
         {
-            await _articleImageService.DeleteImageAsync(existingArticle.ImagePath);
+            await _articleImageService.DeleteImage(existingArticle.ImagePath);
             article.ImagePath = null;
         }
 
@@ -73,7 +73,7 @@ public class ArticleController : ControllerBase
             try
             {
                 await using var stream = image.OpenReadStream();
-                article.ImagePath = await _articleImageService.ReplaceImageAsync(
+                article.ImagePath = await _articleImageService.ReplaceImage(
                     existingArticle.ImagePath,
                     image.FileName,
                     image.ContentType,
@@ -102,7 +102,7 @@ public class ArticleController : ControllerBase
         if (!result.Success)
             return this.ToActionResult(result);
 
-        await _articleImageService.DeleteImageAsync(existingArticle.ImagePath);
+        await _articleImageService.DeleteImage(existingArticle.ImagePath);
 
         return this.ToActionResult(result);
     }
