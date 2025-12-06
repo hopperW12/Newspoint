@@ -8,6 +8,6 @@ public class CategoryProfile : Profile
 {
     public CategoryProfile()
     {
-        CreateMap<Comment, CommentDto>();
+        CreateMap<Category, CategoryDto>();
     }
 }
