@@ -12,8 +12,6 @@ const AdminBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log(users);
-
   useEffect(() => {
     if (!user) return;
 
