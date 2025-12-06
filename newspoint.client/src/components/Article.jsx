@@ -8,7 +8,7 @@ const Article = ({ article }) => {
         <div className="article-title-inner-wrap">
           <Link to={`/Articles/${article.id}`}>
             <img
-              src={defaultArticleImg}
+              src={article.imagePath || defaultArticleImg}
               alt="Clanek Image"
               className="article-title-img"
             />

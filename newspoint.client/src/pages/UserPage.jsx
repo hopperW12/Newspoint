@@ -28,8 +28,6 @@ const UserPage = () => {
 
         const data = await res.json();
         setCategories(data);
-
-        console.log(data);
       } catch (err) {
         console.error(err);
       }

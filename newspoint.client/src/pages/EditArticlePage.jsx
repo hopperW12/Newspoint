@@ -14,18 +14,24 @@ const EditArticlePage = () => {
   const [content, setContent] = useState("");
   const [image, setImage] = useState(null);
   const [deleteImage, setDeleteImage] = useState(false);
+  const [categoryId, setCategoryId] = useState(null);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchArticle = async () => {
+    const fetchArticleAndCategories = async () => {
       try {
-        const res = await fetch(`/api/article/${id}`);
-        if (!res.ok) throw new Error("Chyba při načítání článku.");
-        const articleData = await res.json();
+        // 1. Získání článku
+        const resArticle = await fetch(`/api/article/${id}`, {
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+        if (!resArticle.ok) throw new Error("Chyba při načítání článku.");
+        const articleData = await resArticle.json();
 
+        // Kontrola oprávnění
         if (
-          user.nameid !== articleData.data.authorId &&
+          user.nameid !== articleData.data.authorId.toString() &&
           user.role !== "Admin" &&
           user.role !== "Editor"
         ) {
@@ -36,25 +42,40 @@ const EditArticlePage = () => {
         setArticle(articleData.data);
         setTitle(articleData.data.title);
         setContent(articleData.data.content);
+        setCategoryId(articleData.data.categoryId);
         setDeleteImage(false);
+
+        // 2. Získání kategorií
+        const resCategories = await fetch("/api/category", {
+          headers: { Authorization: `Bearer ${jwt}` },
+        });
+        if (!resCategories.ok) throw new Error("Chyba při načítání kategorií.");
+        const categoriesData = await resCategories.json();
+        setCategories(categoriesData);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-    fetchArticle();
-  }, [id, user, navigate]);
+
+    fetchArticleAndCategories();
+  }, [id, user, jwt, navigate]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const formData = new FormData();
+      if (!article) return;
 
-      if (title !== article.title) formData.append("title", title);
-      if (content !== article.content) formData.append("content", content);
+      const formData = new FormData();
+      formData.append("Id", article.id);
+      formData.append("Title", title);
+      formData.append("Content", content);
+      formData.append("CategoryId", categoryId);
+      formData.append("AuthorId", article.authorId);
       if (image) formData.append("image", image);
-      if (deleteImage) formData.append("deleteImage", "true");
+      if (deleteImage) formData.append("deleteImage", true);
+      formData.append("ImagePath", article.imagePath || "");
 
       const res = await fetch(`/api/account/article/${id}`, {
         method: "PUT",
@@ -98,6 +119,23 @@ const EditArticlePage = () => {
             placeholder="Obsah článku"
             required
           />
+
+          <label>Vyberte kategorii</label>
+          <select
+            value={categoryId || ""}
+            onChange={(e) => setCategoryId(Number(e.target.value))}
+            required
+          >
+            <option value="" disabled>
+              -- Vyberte kategorii --
+            </option>
+            {categories.map((cat) => (
+              <option key={cat.id} value={cat.id}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
+
           <div className="edit-article-delete-image-wrap">
             <label>
               <input
@@ -108,12 +146,14 @@ const EditArticlePage = () => {
               Smazat aktuální obrázek
             </label>
           </div>
+
           <label>Nahrát nový obrázek (volitelné)</label>
           <input
             type="file"
             accept="image/*"
             onChange={(e) => setImage(e.target.files[0])}
           />
+
           <button type="submit">Uložit změny</button>
         </form>
       </div>
