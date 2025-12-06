@@ -7,4 +7,6 @@ public class ArticleCreateDto
     public DateTime PublishedAt { get; set; }
     public int CategoryId { get; set; }
     public int AuthorId { get; set; }
+
+    public string? ImagePath { get; set; }
 }

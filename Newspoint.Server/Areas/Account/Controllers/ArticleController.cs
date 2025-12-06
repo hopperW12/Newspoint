@@ -18,15 +18,18 @@ public class ArticleController : ControllerBase
 {
     private readonly IUserService _userService;
     private readonly IArticleService _articleService;
+    private readonly IArticleImageService _articleImageService;
     private readonly IMapper _mapper;
 
     public ArticleController(
         IUserService userService,
         IArticleService articleService,
+        IArticleImageService articleImageService,
         IMapper mapper)
     {
         _userService = userService;
         _articleService = articleService;
+        _articleImageService = articleImageService;
         _mapper = mapper;
     }
 
@@ -44,17 +47,33 @@ public class ArticleController : ControllerBase
     }
     
     [HttpPost]
-    public async Task<IActionResult> AddArticle([FromBody] AccountArticleCreateDto accountArticleDto)
+    public async Task<IActionResult> AddArticle([FromForm] AccountArticleCreateDto accountArticleDto, IFormFile? image)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
-        
+
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
-        
+
         var article = _mapper.Map<Article>(accountArticleDto);
         article.AuthorId = user.Id;
-        
+
+        if (image != null && image.Length > 0)
+        {
+            try
+            {
+                await using var stream = image.OpenReadStream();
+                article.ImagePath = await _articleImageService.SaveImageAsync(
+                    image.FileName,
+                    image.ContentType,
+                    stream);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         var result = await _articleService.Add(article);
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
@@ -71,8 +90,19 @@ public class ArticleController : ControllerBase
         var canDelete = await _articleService.CanUserDelete(user.Id, id);
         if (!canDelete.Success)
             return this.ToActionResult(canDelete);
-        
+
+        var existingResult = await _articleService.GetById(id);
+        if (!existingResult.Success || existingResult.Data == null)
+            return this.ToActionResult(existingResult);
+
+        var existingArticle = existingResult.Data;
+
         var result = await _articleService.Delete(id);
+        if (!result.Success)
+            return this.ToActionResult(result);
+
+        await _articleImageService.DeleteImageAsync(existingArticle.ImagePath);
+
         return this.ToActionResult(result);
     }
 }

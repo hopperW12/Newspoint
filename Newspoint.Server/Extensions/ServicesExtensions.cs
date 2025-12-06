@@ -9,6 +9,7 @@ using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
 using Newspoint.Infrastructure.Repositories;
+using Newspoint.Server.Services;
 
 namespace Newspoint.Server.Extensions;
 
@@ -93,6 +94,12 @@ public static class ServicesExtensions
             });
         });
 
+        return services;
+    }
+    
+    public static IServiceCollection AddWebServicesFromAssembly(this IServiceCollection services)
+    {
+        services.AddScoped<IArticleImageService, ArticleImageService>();
         return services;
     }
 }

@@ -10,6 +10,7 @@ builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddRepositoriesFromAssembly();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddServicesFromAssembly();
+builder.Services.AddWebServicesFromAssembly();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 

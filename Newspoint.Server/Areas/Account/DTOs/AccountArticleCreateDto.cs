@@ -6,4 +6,6 @@ public class AccountArticleCreateDto
     public string Content { get; set; }
     public DateTime PublishedAt { get; set; }
     public int CategoryId { get; set; }
+
+    public string? ImagePath { get; set; }
 }

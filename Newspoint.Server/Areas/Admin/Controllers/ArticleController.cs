@@ -1,8 +1,6 @@
 ﻿using AutoMapper;
-using Bogus.DataSets;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newspoint.Application.Services;
 using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Admin.DTOs;
@@ -18,26 +16,75 @@ namespace Newspoint.Server.Areas.Admin.Controllers;
 public class ArticleController : ControllerBase
 {
     private readonly IArticleService _articleService;
+    private readonly IArticleImageService _articleImageService;
     private readonly IMapper _mapper;
 
-    public ArticleController(IArticleService articleService, IMapper mapper)
+    public ArticleController(IArticleService articleService, IArticleImageService articleImageService, IMapper mapper)
     {
         _articleService = articleService;
+        _articleImageService = articleImageService;
         _mapper = mapper;
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddArticle([FromBody] ArticleCreateDto articleDto)
+    public async Task<IActionResult> AddArticle([FromForm] ArticleCreateDto articleDto, IFormFile? image)
     {
         var article = _mapper.Map<Article>(articleDto);
+
+        if (image != null && image.Length > 0)
+        {
+            try
+            {
+                await using var stream = image.OpenReadStream();
+                article.ImagePath = await _articleImageService.SaveImageAsync(
+                    image.FileName,
+                    image.ContentType,
+                    stream);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         var result = await _articleService.Add(article);
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateArticle([FromBody] ArticleUpdateDto articleDto)
+    public async Task<IActionResult> UpdateArticle([FromForm] ArticleUpdateDto articleDto, IFormFile? image, [FromForm] bool deleteImage = false)
     {
+        var existingResult = await _articleService.GetById(articleDto.Id);
+        if (!existingResult.Success || existingResult.Data == null)
+            return this.ToActionResult(existingResult);
+
+        var existingArticle = existingResult.Data;
         var article = _mapper.Map<Article>(articleDto);
+        article.ImagePath = existingArticle.ImagePath;
+
+        if (deleteImage)
+        {
+            await _articleImageService.DeleteImageAsync(existingArticle.ImagePath);
+            article.ImagePath = null;
+        }
+
+        if (image != null && image.Length > 0)
+        {
+            try
+            {
+                await using var stream = image.OpenReadStream();
+                article.ImagePath = await _articleImageService.ReplaceImageAsync(
+                    existingArticle.ImagePath,
+                    image.FileName,
+                    image.ContentType,
+                    stream);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
         var result = await _articleService.Update(article);
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
@@ -45,7 +92,18 @@ public class ArticleController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArticle(int id)
     {
+        var existingResult = await _articleService.GetById(id);
+        if (!existingResult.Success || existingResult.Data == null)
+            return this.ToActionResult(existingResult);
+
+        var existingArticle = existingResult.Data;
+
         var result = await _articleService.Delete(id);
+        if (!result.Success)
+            return this.ToActionResult(result);
+
+        await _articleImageService.DeleteImageAsync(existingArticle.ImagePath);
+
         return this.ToActionResult(result);
     }
 }

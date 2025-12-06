@@ -13,15 +13,18 @@ namespace Newspoint.Tests.Controllers.Admin
     public class ArticleControllerTests
     {
         private readonly Mock<IArticleService> _mockService;
+        private readonly Mock<IArticleImageService> _mockImageService;
         private readonly Mock<IMapper> _mockMapper;
         private readonly ArticleController _controller;
 
         public ArticleControllerTests()
         {
             _mockService = new Mock<IArticleService>();
+            _mockImageService = new Mock<IArticleImageService>();
             _mockMapper = new Mock<IMapper>();
             _controller = new ArticleController(
                 _mockService.Object,
+                _mockImageService.Object,
                 _mockMapper.Object);
         }
 
@@ -43,7 +46,7 @@ namespace Newspoint.Tests.Controllers.Admin
                 .Returns(article);
 
             // Test
-            var actionResult = await _controller.AddArticle(articleCreateDto);
+            var actionResult = await _controller.AddArticle(articleCreateDto, image: null);
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
             var result = Assert.IsType<Result<ArticleDto>>(okResult.Value);
 
@@ -65,7 +68,7 @@ namespace Newspoint.Tests.Controllers.Admin
                 .Returns(article);
 
             // Test
-            var actionResult = await _controller.AddArticle(articleCreateDto);
+            var actionResult = await _controller.AddArticle(articleCreateDto, image: null);
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
             var result = Assert.IsType<Result<ArticleDto>>(notFoundResult.Value);
 
@@ -86,7 +89,7 @@ namespace Newspoint.Tests.Controllers.Admin
                 .Returns(article);
 
             // Test
-            var actionResult = await _controller.AddArticle(articleCreateDto);
+            var actionResult = await _controller.AddArticle(articleCreateDto, image: null);
             var resultObject = Assert.IsType<ObjectResult>(actionResult);
 
             Assert.Equal(500, resultObject.StatusCode);
@@ -99,10 +102,12 @@ namespace Newspoint.Tests.Controllers.Admin
         public async Task UpdateArticle_When_ReturnOk()
         {
             // Arrange
-            var articleUpdateDto = new ArticleUpdateDto { Title = "Updated Title" };
+            var articleUpdateDto = new ArticleUpdateDto { Id = 1, Title = "Updated Title" };
             var article = new Article { Id = 1, Title = "Updated Title" };
             var articleDto = new ArticleDto { Id = 1, Title = "Updated Title" };
 
+            _mockService.Setup(a => a.GetById(1))
+                .ReturnsAsync(Result<Article>.Ok(article));
             _mockService.Setup(a => a.Update(It.IsAny<Article>()))
                 .ReturnsAsync(Result<Article>.Ok(article));
             _mockMapper.Setup(m => m.Map<ArticleDto>(It.IsAny<Article>()))
@@ -111,7 +116,7 @@ namespace Newspoint.Tests.Controllers.Admin
                 .Returns(article);
 
             // Test
-            var actionResult = await _controller.UpdateArticle(articleUpdateDto);
+            var actionResult = await _controller.UpdateArticle(articleUpdateDto, image: null, deleteImage: false);
             var okResult = Assert.IsType<OkObjectResult>(actionResult);
             var result = Assert.IsType<Result<ArticleDto>>(okResult.Value);
 
@@ -124,35 +129,36 @@ namespace Newspoint.Tests.Controllers.Admin
         public async Task UpdateArticle_When_ReturnNotFound()
         {
             // Arrange
-            var articleUpdateDto = new ArticleUpdateDto();
+            var articleUpdateDto = new ArticleUpdateDto { Id = 1 };
 
-            _mockService.Setup(a => a.Update(It.IsAny<Article>()))
+            _mockService.Setup(a => a.GetById(1))
                 .ReturnsAsync(Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
-            _mockMapper.Setup(m => m.Map<ArticleDto>(It.IsAny<Article>()))
-                .Returns(new ArticleDto());
 
             // Test
-            var actionResult = await _controller.UpdateArticle(articleUpdateDto);
+            var actionResult = await _controller.UpdateArticle(articleUpdateDto, image: null, deleteImage: false);
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(actionResult);
-            var result = Assert.IsType<Result<ArticleDto>>(notFoundResult.Value);
+            var result = Assert.IsType<Result>(notFoundResult.Value);
 
             Assert.False(result.Success);
-            _mockService.Verify(s => s.Update(It.IsAny<Article>()), Times.Once);
+            _mockService.Verify(s => s.GetById(1), Times.Once);
         }
 
         [Fact]
         public async Task UpdateArticle_When_ReturnStatusCode()
         {
             // Arrange
-            var articleUpdateDto = new ArticleUpdateDto();
+            var articleUpdateDto = new ArticleUpdateDto { Id = 1 };
+            var existingArticle = new Article { Id = 1 };
 
+            _mockService.Setup(a => a.GetById(1))
+                .ReturnsAsync(Result<Article>.Ok(existingArticle));
             _mockService.Setup(a => a.Update(It.IsAny<Article>()))
                 .ReturnsAsync(Result<Article>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
-            _mockMapper.Setup(m => m.Map<ArticleDto>(It.IsAny<Article>()))
-                .Returns(new ArticleDto());
+            _mockMapper.Setup(m => m.Map<Article>(It.IsAny<ArticleUpdateDto>()))
+                .Returns(existingArticle);
 
             // Test
-            var actionResult = await _controller.UpdateArticle(articleUpdateDto);
+            var actionResult = await _controller.UpdateArticle(articleUpdateDto, image: null, deleteImage: false);
             var objectResult = Assert.IsType<ObjectResult>(actionResult);
 
             Assert.Equal(500, objectResult.StatusCode);
@@ -165,6 +171,10 @@ namespace Newspoint.Tests.Controllers.Admin
         public async Task DeleteArticle_When_ReturnOk()
         {
             // Arrange
+            var article = new Article { Id = 10 };
+
+            _mockService.Setup(a => a.GetById(10))
+                .ReturnsAsync(Result<Article>.Ok(article));
             _mockService.Setup(a => a.Delete(10))
                 .ReturnsAsync(Result.Ok());
 
@@ -181,8 +191,8 @@ namespace Newspoint.Tests.Controllers.Admin
         public async Task DeleteArticle_When_ReturnNotFound()
         {
             // Arrange
-            _mockService.Setup(a => a.Delete(11))
-                .ReturnsAsync(Result.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
+            _mockService.Setup(a => a.GetById(11))
+                .ReturnsAsync(Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound));
 
             // Test
             var actionResult = await _controller.DeleteArticle(11);
@@ -190,13 +200,17 @@ namespace Newspoint.Tests.Controllers.Admin
             var result = Assert.IsType<Result>(notFoundResult.Value);
 
             Assert.False(result.Success);
-            _mockService.Verify(s => s.Delete(11), Times.Once);
+            _mockService.Verify(s => s.GetById(11), Times.Once);
         }
 
         [Fact]
         public async Task DeleteArticle_When_ReturnStatusCode()
         {
             // Arrange
+            var article = new Article { Id = 11 };
+
+            _mockService.Setup(a => a.GetById(11))
+                .ReturnsAsync(Result<Article>.Ok(article));
             _mockService.Setup(a => a.Delete(11))
                 .ReturnsAsync(Result.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError));
 
