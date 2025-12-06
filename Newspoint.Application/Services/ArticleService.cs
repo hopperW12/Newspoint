@@ -63,6 +63,7 @@ public class ArticleService : IArticleService
             return Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
 
         article.Author = author;
+        article.PublishedAt = DateTime.Now;
 
         // Add article to DB
         var result = await _articleRepository.Add(article);
