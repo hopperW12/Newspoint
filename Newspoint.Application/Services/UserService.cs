@@ -45,10 +45,11 @@ public class UserService : IUserService
         if (existingUser == null)
             return Result<User>.Error(ResultErrorType.NotFound, ServiceMessages.UserNotFound);
         
-        entity.RegisteredAt = DateTime.Now;
-        entity.Role = Role.Reader;
+        existingUser.FirstName = entity.FirstName;
+        existingUser.LastName = entity.LastName;
+        existingUser.Role = entity.Role;
         
-        var result = await _userRepository.Update(entity);
+        var result = await _userRepository.Update(existingUser);
         if (result == null)
             return Result<User>.Error(ResultErrorType.UnknownError, ServiceMessages.Error);
 
