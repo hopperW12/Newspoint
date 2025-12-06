@@ -80,6 +80,44 @@ public class ArticleController : ControllerBase
         
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> UpdateArticle(int id, [FromForm] AccountArticleUpdateDto articleDto, IFormFile? image, [FromForm] bool deleteImage = false)
+    {
+        var existingResult = await _articleService.GetById(articleDto.Id);
+        if (!existingResult.Success || existingResult.Data == null)
+            return this.ToActionResult(existingResult);
+
+        var existingArticle = existingResult.Data;
+        var article = _mapper.Map<Article>(articleDto);
+        article.ImagePath = existingArticle.ImagePath;
+
+        if (deleteImage)
+        {
+            await _articleImageService.DeleteImage(existingArticle.ImagePath);
+            article.ImagePath = null;
+        }
+
+        if (image != null && image.Length > 0)
+        {
+            try
+            {
+                await using var stream = image.OpenReadStream();
+                article.ImagePath = await _articleImageService.ReplaceImage(
+                    existingArticle.ImagePath,
+                    image.FileName,
+                    image.ContentType,
+                    stream);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        var result = await _articleService.Update(article);
+        return this.ToActionResult<Article, ArticleDto>(result, _mapper);
+    }
     
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArticle(int id)

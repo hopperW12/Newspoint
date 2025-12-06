@@ -88,6 +88,7 @@ public class ArticleService : IArticleService
         articleDb.Content = article.Content;
         articleDb.CategoryId = category.Id;
         articleDb.Category = category;
+        articleDb.ImagePath = article.ImagePath;
 
         var result = await _articleRepository.Update(articleDb);
         if (result == null)
