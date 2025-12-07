@@ -11,6 +11,7 @@ builder.Services.AddRepositoriesFromAssembly();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddServicesFromAssembly();
 builder.Services.AddWebServicesFromAssembly();
+builder.Services.AddApplicationValidation();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
@@ -25,9 +26,7 @@ builder.Services.AddRouting(options =>
     options.LowercaseUrls = true;
 });
 
-
 builder.Services.AddNewspointSwagger();
-
 
 var app = builder.Build();
 

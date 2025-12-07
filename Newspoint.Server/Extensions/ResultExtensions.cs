@@ -15,6 +15,8 @@ public static class ResultExtensions
         {
             ResultErrorType.NotFound => controller.NotFound(
                 new Result { Success = result.Success, Message = result.Message }),
+            ResultErrorType.Validation => controller.BadRequest(
+                new Result { Success = result.Success, Message = result.Message }),
             _ => controller.StatusCode(
                 500,
                 new Result { Success = result.Success, Message = result.Message })
@@ -30,6 +32,8 @@ public static class ResultExtensions
             return result.ErrorType switch
             {
                 ResultErrorType.NotFound => controller.NotFound(
+                    new Result<TDestination> { Success = result.Success, Message = result.Message }),
+                ResultErrorType.Validation => controller.BadRequest(
                     new Result<TDestination> { Success = result.Success, Message = result.Message }),
                 _ => controller.StatusCode(500,
                     new Result<TDestination> { Success = result.Success, Message = result.Message })

@@ -1,4 +1,5 @@
-﻿using Newspoint.Application.Services.Interfaces;
+﻿using FluentValidation;
+using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
 using Newspoint.Infrastructure.Repositories;
 using Newspoint.Infrastructure.Repositories.Interfaces;
@@ -10,15 +11,18 @@ public class CommentService : ICommentService
     private readonly IUserRepository _userRepository;
     private readonly IArticleRepository _articleRepository;
     private readonly ICommentRepository _commentRepository;
+    private readonly IValidator<Comment> _commentValidator;
 
     public CommentService(
         IUserRepository userRepository,
         IArticleRepository articleRepository,
-        ICommentRepository commentRepository)
+        ICommentRepository commentRepository,
+        IValidator<Comment> commentValidator)
     {
         _userRepository = userRepository;
         _articleRepository = articleRepository;
         _commentRepository = commentRepository;
+        _commentValidator = commentValidator;
     }
 
     public async Task<Result<Comment>> GetById(int id)
@@ -32,6 +36,13 @@ public class CommentService : ICommentService
 
     public async Task<Result<Comment>> Add(Comment comment)
     {
+        // FluentValidation
+        var validationResult = await _commentValidator.ValidateAsync(comment);
+        if (!validationResult.IsValid)
+        {
+            var firstError = validationResult.Errors.FirstOrDefault()?.ErrorMessage ?? ServiceMessages.Error;
+            return Result<Comment>.Error(ResultErrorType.Validation, firstError);
+        }
 
         // Find article in DB
         var article = await _articleRepository.GetById(comment.ArticleId);
@@ -48,7 +59,7 @@ public class CommentService : ICommentService
 
         comment.AuthorId = author.Id;
         comment.Author = author;
-        
+
         // Set published date
         comment.PublishedAt = DateTime.Now;
 
@@ -62,6 +73,14 @@ public class CommentService : ICommentService
 
     public async Task<Result<Comment>> Update(Comment commentDto)
     {
+        // FluentValidation
+        var validationResult = await _commentValidator.ValidateAsync(commentDto);
+        if (!validationResult.IsValid)
+        {
+            var firstError = validationResult.Errors.FirstOrDefault()?.ErrorMessage ?? ServiceMessages.Error;
+            return Result<Comment>.Error(ResultErrorType.Validation, firstError);
+        }
+
         // Find comment in DB
         var commentDb = await _commentRepository.GetById(commentDto.Id);
         if (commentDb == null)
@@ -72,7 +91,7 @@ public class CommentService : ICommentService
         // Update comment in DB
         var result = await _commentRepository.Update(commentDb);
         if (result == null)
-            return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
+            return Result<Comment>.Error(ResultErrorType.UnknownError, ServiceMessages.CommentError);
 
         return Result<Comment>.Ok(result);
     }
@@ -94,13 +113,13 @@ public class CommentService : ICommentService
     public async Task<Result> CanUserDelete(int userId, int commentId)
     {
         var comment = await _commentRepository.GetById(commentId);
-        if (comment == null) 
+        if (comment == null)
             return Result.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
-        
+
         var user = await _userRepository.GetById(userId);
-        if (user == null || !(user.Role == Role.Admin || user.Id == comment.AuthorId)) 
+        if (user == null || !(user.Role == Role.Admin || user.Id == comment.AuthorId))
             return Result.Error(ResultErrorType.UnknownError, ServiceMessages.Error);
-        
+
         return Result.Ok();
     }
 }

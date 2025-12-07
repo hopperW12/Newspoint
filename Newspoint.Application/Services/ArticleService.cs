@@ -1,4 +1,5 @@
-﻿using Newspoint.Application.Services.Interfaces;
+﻿using FluentValidation;
+using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
 using Newspoint.Infrastructure.Repositories;
 using Newspoint.Infrastructure.Repositories.Interfaces;
@@ -10,15 +11,18 @@ public class ArticleService : IArticleService
     private readonly ICategoryRepository _categoryRepository;
     private readonly IUserRepository _userRepository;
     private readonly IArticleRepository _articleRepository;
+    private readonly IValidator<Article> _articleValidator;
 
     public ArticleService(
         ICategoryRepository categoryRepository,
         IUserRepository userRepository,
-        IArticleRepository articleRepository)
+        IArticleRepository articleRepository,
+        IValidator<Article> articleValidator)
     {
         _categoryRepository = categoryRepository;
         _userRepository = userRepository;
         _articleRepository = articleRepository;
+        _articleValidator = articleValidator;
     }
 
     public Task<ICollection<Article>> GetAll()
@@ -46,6 +50,14 @@ public class ArticleService : IArticleService
 
     public async Task<Result<Article>> Add(Article article)
     {
+        // FluentValidation
+        var validationResult = await _articleValidator.ValidateAsync(article);
+        if (!validationResult.IsValid)
+        {
+            var firstError = validationResult.Errors.FirstOrDefault()?.ErrorMessage ?? ServiceMessages.Error;
+            return Result<Article>.Error(ResultErrorType.Validation, firstError);
+        }
+
         // Find category in DB
         var category = await _categoryRepository.GetById(article.CategoryId);
         if (category == null)
@@ -60,7 +72,7 @@ public class ArticleService : IArticleService
 
         // Check author permission
         if (author.Role == Role.Reader)
-            return Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
+            return Result<Article>.Error(ResultErrorType.Validation, ServiceMessages.AuthorNotFound);
 
         article.Author = author;
         article.PublishedAt = DateTime.Now;
@@ -68,13 +80,21 @@ public class ArticleService : IArticleService
         // Add article to DB
         var result = await _articleRepository.Add(article);
         if (result == null)
-            return Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleError);
+            return Result<Article>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError);
 
         return Result<Article>.Ok(result);
     }
 
     public async Task<Result<Article>> Update(Article article)
     {
+        // FluentValidation
+        var validationResult = await _articleValidator.ValidateAsync(article);
+        if (!validationResult.IsValid)
+        {
+            var firstError = validationResult.Errors.FirstOrDefault()?.ErrorMessage ?? ServiceMessages.Error;
+            return Result<Article>.Error(ResultErrorType.Validation, firstError);
+        }
+
         // Find category in DB
         var category = await _categoryRepository.GetById(article.CategoryId);
         if (category == null)
@@ -93,7 +113,7 @@ public class ArticleService : IArticleService
 
         var result = await _articleRepository.Update(articleDb);
         if (result == null)
-            return Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleError);
+            return Result<Article>.Error(ResultErrorType.UnknownError, ServiceMessages.ArticleError);
 
         return Result<Article>.Ok(result);
     }
@@ -102,7 +122,7 @@ public class ArticleService : IArticleService
     {
         var result = await _articleRepository.Delete(id);
         if (!result)
-            return Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
+            return Result.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
 
         return Result.Ok();
     }
@@ -115,13 +135,13 @@ public class ArticleService : IArticleService
     public async Task<Result> CanUserDelete(int userId, int articleId)
     {
         var article = await _articleRepository.GetById(articleId);
-        if (article == null) 
+        if (article == null)
             return Result.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
-        
+
         var user = await _userRepository.GetById(userId);
-        if (user == null || !(user.Role == Role.Admin || user.Id == article.AuthorId)) 
+        if (user == null || !(user.Role == Role.Admin || user.Id == article.AuthorId))
             return Result.Error(ResultErrorType.UnknownError, ServiceMessages.Error);
-        
+
         return Result.Ok();
     }
 }

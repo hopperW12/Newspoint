@@ -1,10 +1,13 @@
 ﻿using System.Text;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newspoint.Application.Services;
 using Newspoint.Application.Services.Interfaces;
+using Newspoint.Application.Validation;
 using Newspoint.Domain.Interfaces;
 using Newspoint.Infrastructure.Database;
 using Newspoint.Infrastructure.Database.Seeders;
@@ -100,6 +103,13 @@ public static class ServicesExtensions
     public static IServiceCollection AddWebServicesFromAssembly(this IServiceCollection services)
     {
         services.AddScoped<IArticleImageService, ArticleImageService>();
+        return services;
+    }
+
+    public static IServiceCollection AddApplicationValidation(this IServiceCollection services)
+    {
+        services.AddValidatorsFromAssemblyContaining<UserValidator>();
+        services.AddFluentValidationAutoValidation();
         return services;
     }
 }

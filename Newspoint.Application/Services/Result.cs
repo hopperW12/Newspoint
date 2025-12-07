@@ -24,5 +24,6 @@ public class Result<T> : Result
 public enum ResultErrorType
 {
     NotFound,
+    Validation,
     UnknownError
 }
