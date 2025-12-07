@@ -99,7 +99,7 @@ const HomePage = () => {
           <p className="homepage-no-articles">Žádné články v této kategorii.</p>
         ) : (
           [...filteredArticles]
-            .sort((a, b) => new Date(a.publishedAt) - new Date(b.publishedAt))
+            .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
             .map((article) => <Article key={article.id} article={article} />)
         )}
       </div>
