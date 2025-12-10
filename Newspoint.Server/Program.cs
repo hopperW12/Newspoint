@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
-using Microsoft.OpenApi.Models;
+using Newspoint.Application.Extensions;
+using Newspoint.Infrastructure.Extensions;
 using Newspoint.Server.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,16 +12,18 @@ builder.Services.AddRepositoriesFromAssembly();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddServicesFromAssembly();
 builder.Services.AddWebServicesFromAssembly();
-builder.Services.AddApplicationValidation();
+builder.Services.AddValidationFromAssembly();
 
 builder.Services.AddJwtAuthentication(builder.Configuration);
 
+// Add controllers
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
+// Configure lower case urls
 builder.Services.AddRouting(options =>
 {
     options.LowercaseUrls = true;
@@ -38,6 +41,7 @@ app.MapStaticAssets();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    // Swagger
     app.UseSwagger();
     app.UseSwaggerUI(c =>
     {
