@@ -11,6 +11,6 @@ public interface IArticleRepository : IRepository
     Task<Article?> Add(Article entity);
     Task<Article?> Update(Article entity);
     Task<bool> Delete(int id);
-    
+
     Task<ICollection<Article>> GetUserArticles(int userId);
 }

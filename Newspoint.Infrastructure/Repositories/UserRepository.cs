@@ -16,7 +16,7 @@ public class UserRepository : IUserRepository
 
     public async Task<ICollection<User>> GetAll()
     {
-        var users =  await _dataDbContext.Users.ToListAsync();
+        var users = await _dataDbContext.Users.ToListAsync();
         return users;
     }
 

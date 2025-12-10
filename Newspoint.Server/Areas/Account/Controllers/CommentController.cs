@@ -35,10 +35,10 @@ public class CommentController : ControllerBase
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
-        
+
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
-        
+
         var comments = await _commentService.GetUserComments(user.Id);
         return Ok(_mapper.Map<IEnumerable<CommentDto>>(comments));
     }
@@ -48,13 +48,13 @@ public class CommentController : ControllerBase
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
-        
+
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
-        
+
         var comment = _mapper.Map<Comment>(accountCommentDto);
         comment.AuthorId = user.Id;
-        
+
         var result = await _commentService.Add(comment);
         return this.ToActionResult<Comment, CommentDto>(result, _mapper);
     }
@@ -64,14 +64,14 @@ public class CommentController : ControllerBase
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
-        
+
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
-        
+
         var canDelete = await _commentService.CanUserDelete(user.Id, id);
         if (!canDelete.Success)
             return this.ToActionResult(canDelete);
-        
+
         var result = await _commentService.Delete(id);
         return this.ToActionResult(result);
     }

@@ -2,10 +2,8 @@
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Newspoint.Application.Services;
 using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain;
 using Newspoint.Domain.Entities;
@@ -20,11 +18,11 @@ namespace Newspoint.Server.Areas.Auth.Controllers;
 public class AuthController : ControllerBase
 {
     private const int ExpiresTime = 1;
-    
+
     private readonly string _jwtSecret;
     private readonly IUserService _userService;
     private readonly IMapper _mapper;
-    
+
     public AuthController(
         IUserService userService,
         IMapper mapper,
@@ -39,23 +37,23 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {
         var user = await _userService.GetByEmail(userLoginDto.Email);
-        if (user == null || user.Password != PasswordHasher.HashPassword(userLoginDto.Password)) 
+        if (user == null || user.Password != PasswordHasher.HashPassword(userLoginDto.Password))
             return Unauthorized();
 
         var token = CreateToken(user);
-        return Ok( new { Token = token } );
-        
+        return Ok(new { Token = token });
+
     }
 
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] UserRegisterDto userRegisterDto)
     {
         var newUser = _mapper.Map<User>(userRegisterDto);
-        
+
         var result = await _userService.Add(newUser);
-        if (!result.Success) 
+        if (!result.Success)
             return this.ToActionResult(result);
-        
+
         // Create token
         var token = CreateToken(newUser);
         return Ok(new { Token = token });
@@ -84,4 +82,4 @@ public class AuthController : ControllerBase
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-} 
+}

@@ -19,7 +19,7 @@ public static class ServiceCollectionExtensions
         });
         return services;
     }
-    
+
     public static IServiceCollection AddValidationFromAssembly(this IServiceCollection services)
     {
         services.AddValidatorsFromAssemblyContaining<UserValidator>();

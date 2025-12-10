@@ -10,7 +10,7 @@ public interface IArticleService : IService
     Task<Result<Article>> Add(Article article);
     Task<Result<Article>> Update(Article article);
     Task<Result> Delete(int id);
-    
+
     Task<ICollection<Article>> GetUserArticles(int userId);
     Task<Result> CanUserDelete(int userId, int articleId);
 }

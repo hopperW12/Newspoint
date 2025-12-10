@@ -1,5 +1,5 @@
-﻿using Moq;
-using AutoMapper;
+﻿using AutoMapper;
+using Moq;
 using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Public.Controllers;

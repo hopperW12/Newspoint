@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Newspoint.Application.Services.Interfaces;
 using Newspoint.Server.Areas.Public.DTOs;
 

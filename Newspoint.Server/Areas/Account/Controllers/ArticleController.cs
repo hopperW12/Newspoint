@@ -38,14 +38,14 @@ public class ArticleController : ControllerBase
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
-        
+
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
-        
+
         var articles = await _articleService.GetUserArticles(user.Id);
         return Ok(_mapper.Map<IEnumerable<ArticleDto>>(articles));
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddArticle([FromForm] AccountArticleCreateDto accountArticleDto, IFormFile? image)
     {
@@ -77,7 +77,7 @@ public class ArticleController : ControllerBase
         var result = await _articleService.Add(article);
         if (!result.Success)
             await _articleImageService.DeleteImage(article.ImagePath);
-        
+
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
 
@@ -118,16 +118,16 @@ public class ArticleController : ControllerBase
         var result = await _articleService.Update(article);
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
-    
+
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArticle(int id)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);
         if (email == null) return Unauthorized();
-        
+
         var user = await _userService.GetByEmail(email);
         if (user == null) return Unauthorized();
-        
+
         var canDelete = await _articleService.CanUserDelete(user.Id, id);
         if (!canDelete.Success)
             return this.ToActionResult(canDelete);

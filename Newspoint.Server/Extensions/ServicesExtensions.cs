@@ -32,7 +32,7 @@ public static class ServicesExtensions
     {
         var secret = configuration["Auth:Secret"] ?? "739f17f4b258de7e39184e84bcea413b";
         var key = Encoding.ASCII.GetBytes(secret);
-        
+
         services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -42,17 +42,17 @@ public static class ServicesExtensions
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = false,     
-                    ValidateAudience = false,   
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(key)
                 };
             });
-        
+
         return services;
     }
-    
+
     public static IServiceCollection AddNewspointSwagger(this IServiceCollection services)
     {
         services.AddEndpointsApiExplorer();
@@ -69,7 +69,7 @@ public static class ServicesExtensions
 
         return services;
     }
-    
+
     public static IServiceCollection AddWebServicesFromAssembly(this IServiceCollection services)
     {
         services.AddScoped<IArticleImageService, ArticleImageService>();

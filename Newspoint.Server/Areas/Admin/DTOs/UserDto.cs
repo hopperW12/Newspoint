@@ -12,5 +12,5 @@ public class UserDto
     public string Email { get; set; }
 
     public DateTime RegisteredAt { get; set; }
-    
+
 }

@@ -4,7 +4,7 @@ public static class ServiceMessages
 {
     // General
     public const string Error = "Nastala chyba.";
-    
+
     // Article
     public const string ArticleNotFound = "Tento článek nebyl nalezen.";
     public const string ArticleError = "Nastala chyba.";
@@ -21,7 +21,7 @@ public static class ServiceMessages
 
     // Author
     public const string AuthorNotFound = "Tento autor nebyl nalezen.";
-    
+
     // User
     public const string UserEmailExist = "Tento email je již zaregistrovany.";
     public const string UserRegisterError = "Nastala chyba.";
