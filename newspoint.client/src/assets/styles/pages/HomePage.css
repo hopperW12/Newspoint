@@ -102,6 +102,42 @@
   color: #b36d00;
 }
 
+.article-meta {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 4px;
+}
+
+.article-meta-author {
+  font-weight: 500;
+}
+
+.article-meta-date {
+  font-variant-numeric: tabular-nums;
+}
+
+.homepage-search-wrap {
+  width: 1100px;
+  margin: 1rem auto 0 auto;
+  display: flex;
+  justify-content: center;
+}
+
+.homepage-search-input {
+  width: 100%;
+  max-width: 480px;
+  padding: 0.5rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid #ccc;
+  font-size: 0.95rem;
+}
+
+.homepage-search-input:focus {
+  outline: none;
+  border-color: #0077ff;
+  box-shadow: 0 0 0 2px rgba(0, 119, 255, 0.15);
+}
+
 /* Responsive */
 @media (max-width: 1100px) {
   .homepage-categories-wrap {

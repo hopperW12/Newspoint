@@ -7,6 +7,7 @@ const HomePage = () => {
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState(["all"]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,15 +63,33 @@ const HomePage = () => {
     }
   };
 
-  // Filtrovani clanku
-  const filteredArticles = selectedCategories.includes("all")
+  // filtrování 
+  const search = searchQuery.trim().toLowerCase();
+
+  const categoryFiltered = selectedCategories.includes("all")
     ? articles
-    : articles.filter((a) => selectedCategories.includes(String(a.categoryId)));
+    : articles.filter((a) =>
+        selectedCategories.includes(String(a.categoryId))
+      );
+
+  const filteredArticles = categoryFiltered.filter((a) => {
+    if (search === "") return true;
+
+    const title = (a.title || "").toLowerCase();
+    const content = (a.content || "").toLowerCase();
+    const author = (a.author || "").toLowerCase();
+
+    return (
+      title.includes(search) ||
+      content.includes(search) ||
+      author.includes(search)
+    );
+  });
 
   return (
     <main className="homepage-main">
       <Navbar />
-
+        
       <div className="homepage-categories-wrap">
         <span
           className={`category-pill ${
@@ -93,7 +112,17 @@ const HomePage = () => {
           </span>
         ))}
       </div>
-
+        
+        <div className="homepage-search-wrap">
+            <input
+                type="text"
+                className="homepage-search-input"
+                placeholder="Hledat podle titulku, obsahu nebo autora..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+            />
+        </div>
+        
       <div className="articles-wrap">
         {filteredArticles.length === 0 ? (
           <p className="homepage-no-articles">Žádné články v této kategorii.</p>
