@@ -20,8 +20,26 @@ public class DatabaseSeeder
         var users = FakeEntityFactory.User().Generate(10);
         var categories = FakeEntityFactory.Category().Generate(10);
 
+        // Odstraníme duplicity v názvech kategorií
+        categories = categories
+            .GroupBy(c => c.Name)
+            .Select(g => g.First())
+            .ToList();
+
+        // Vynecháme kategorie, které už v DB existují se stejným jménem
+        var existingCategoryNames = _context.Categories
+            .Select(c => c.Name)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        categories = categories
+            .Where(c => !existingCategoryNames.Contains(c.Name))
+            .ToList();
+
         await _context.Users.AddRangeAsync(users);
-        await _context.Categories.AddRangeAsync(categories);
+
+        if (categories.Count > 0)
+            await _context.Categories.AddRangeAsync(categories);
+
         await _context.SaveChangesAsync();
 
         var articles = FakeEntityFactory.Article(users, categories).Generate(25);
