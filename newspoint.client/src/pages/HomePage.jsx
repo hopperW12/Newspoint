@@ -11,6 +11,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Getne vsechny articles a categories
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,6 +41,7 @@ const HomePage = () => {
   if (loading) return <p>Načítám...</p>;
   if (error) return <p>Chyba: {error}</p>;
 
+  // Vyber categorii
   const toggleCategory = (id) => {
     // Klik na "all" vypne ostatni kategorie
     if (id === "all") {

@@ -15,8 +15,6 @@ const ArticleDetail = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log(article);
-
   // Nacteni detailu clanku
   useEffect(() => {
     const fetchArticle = async () => {
@@ -164,14 +162,16 @@ const ArticleDetail = () => {
                       .split(". ")
                       .join(".")}
                   </p>
-                  {user && comment.authorId == +user.nameid && (
-                    <button
-                      onClick={() => handleDeleteComment(comment.id)}
-                      className="article-detail-comment-delete-btn"
-                    >
-                      <TiDelete />
-                    </button>
-                  )}
+                  {user &&
+                    (comment.authorId === Number(user.nameid) ||
+                      user.role === "Admin") && (
+                      <button
+                        onClick={() => handleDeleteComment(comment.id)}
+                        className="article-detail-comment-delete-btn"
+                      >
+                        <TiDelete />
+                      </button>
+                    )}
                 </div>
               </div>
               <div className="article-detail-comment-content">

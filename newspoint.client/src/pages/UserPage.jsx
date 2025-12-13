@@ -9,7 +9,9 @@ import "../assets/styles/pages/UserPage.css";
 const UserPage = () => {
   const { user, jwt } = useContext(AuthContext);
 
-  if (!user) return <p>Musíte být přihlášeni, abyste viděli tuto stránku.</p>;
+  if (!user) {
+    return <p>Musíte být přihlášeni, abyste viděli tuto stránku.</p>;
+  }
 
   const [articles, setArticles] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -19,6 +21,8 @@ const UserPage = () => {
   const [newContent, setNewContent] = useState("");
   const [newImage, setNewImage] = useState(null);
   const [newCategory, setNewCategory] = useState("");
+
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -49,19 +53,27 @@ const UserPage = () => {
 
       const res = await fetch("/api/account/article", {
         method: "POST",
-        headers: { Authorization: `Bearer ${jwt}` },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
         body: formData,
       });
 
       if (!res.ok) throw new Error("Chyba při vytváření článku");
 
-      const created = await res.json();
+      // ✔ úspěšně vytvořeno
+      setSuccessMessage("Článek byl úspěšně vytvořen 🎉");
 
-      setArticles([...articles, created]);
+      // reset formuláře
       setNewTitle("");
       setNewContent("");
       setNewImage(null);
       setNewCategory("");
+
+      // reload stránky po krátké době
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
     } catch (err) {
       alert(err.message);
     }
@@ -85,7 +97,7 @@ const UserPage = () => {
       <Navbar />
 
       <div className="user-page-container">
-        <h2 className="user-page-title">Můj profil - {user.unique_name}</h2>
+        <h2 className="user-page-title">Můj profil – {user.unique_name}</h2>
 
         {(user.role === "Editor" || user.role === "Admin") && (
           <div className="admin-create-article-box">
@@ -134,12 +146,20 @@ const UserPage = () => {
                 onChange={(e) => setNewImage(e.target.files[0])}
               />
 
+              {successMessage && (
+                <div className="admin-create-article-success">
+                  {successMessage}
+                </div>
+              )}
+
               <button className="admin-create-article-btn" type="submit">
                 Vytvořit článek
               </button>
             </form>
           </div>
         )}
+
+        {error && <p className="user-page-error">{error}</p>}
 
         {renderBoard()}
       </div>

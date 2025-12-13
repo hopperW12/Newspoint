@@ -23,7 +23,14 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
-        <Route path="/edit-article/:id" element={<EditArticlePage />} />
+        <Route
+          path="/edit-article/:id"
+          element={
+            <ProtectedRoute>
+              <EditArticlePage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

@@ -12,11 +12,13 @@ const Register = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  // Register
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // zabrani strance v reloadnuti a ztrate dat
     setError("");
     setSuccess("");
 
+    // Kontrola hesla
     if (password !== confirmPassword) {
       setError("Hesla se neshodují");
       return;
@@ -31,17 +33,21 @@ const Register = () => {
 
       if (!res.ok) throw new Error("Registrace se nezdařila");
 
+      // Pockani na data a ulozeni do localStorage.
       const data = await res.json();
       localStorage.setItem("jwt", data.token);
 
+      // Success message
       setSuccess("Účet byl úspěšně vytvořen.");
 
+      // Smazani fieldu
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
 
+      // Presmerovani na homepage
       navigate("/");
       window.location.reload();
     } catch (err) {
@@ -49,6 +55,7 @@ const Register = () => {
     }
   };
 
+  // Timer na 5s pro success nebo error message
   useEffect(() => {
     if (error || success) {
       const timer = setTimeout(() => {

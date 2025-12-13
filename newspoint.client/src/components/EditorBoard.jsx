@@ -9,12 +9,10 @@ const EditorBoard = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
-
   useEffect(() => {
     if (!user) return;
 
+    // Getne vsechny articles
     const fetchArticles = async () => {
       try {
         const res = await fetch(`/api/account/article`, {
@@ -30,6 +28,7 @@ const EditorBoard = () => {
       }
     };
 
+    // Getne vsechny comments
     const fetchComments = async () => {
       try {
         const res = await fetch(`/api/account/comment`, {
@@ -47,6 +46,7 @@ const EditorBoard = () => {
     fetchComments();
   }, [user, jwt]);
 
+  // Odstraneni articlu
   const handleDeleteArticle = async (id) => {
     if (!window.confirm("Opravdu chcete smazat tento článek?")) return;
     try {
