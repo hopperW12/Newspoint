@@ -12,6 +12,7 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Getne vsechny articles a categories
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -41,6 +42,7 @@ const HomePage = () => {
   if (loading) return <p>Načítám...</p>;
   if (error) return <p>Chyba: {error}</p>;
 
+  // Vyber categorii
   const toggleCategory = (id) => {
     // Klik na "all" vypne ostatni kategorie
     if (id === "all") {
@@ -63,22 +65,25 @@ const HomePage = () => {
     }
   };
 
-  // filtrování 
+  // upraví hledaný text - ořízne mezery a převede na malá písmena
   const search = searchQuery.trim().toLowerCase();
 
+  // pokud je vybráno "all", vezme všechny články, jinak jen ty z vybraných kategorií
   const categoryFiltered = selectedCategories.includes("all")
     ? articles
-    : articles.filter((a) =>
-        selectedCategories.includes(String(a.categoryId))
-      );
+    : articles.filter((a) => selectedCategories.includes(String(a.categoryId)));
 
+  // dál filtruje články podle hledaného textu
   const filteredArticles = categoryFiltered.filter((a) => {
+    // když uživatel nic nehledá, zobrazí se všechny články
     if (search === "") return true;
 
+    // připraví texty článku na porovnávání (malá písmena, ochrana proti null)
     const title = (a.title || "").toLowerCase();
     const content = (a.content || "").toLowerCase();
     const author = (a.author || "").toLowerCase();
 
+    // převede datum článku na text, aby se dalo taky prohledávat
     let dateText = "";
     if (a.publishedAt) {
       dateText = new Date(a.publishedAt)
@@ -94,6 +99,7 @@ const HomePage = () => {
         .toLowerCase();
     }
 
+    // článek projde, pokud se hledaný text najde v názvu, obsahu, autorovi nebo datu
     return (
       title.includes(search) ||
       content.includes(search) ||
@@ -105,7 +111,7 @@ const HomePage = () => {
   return (
     <main className="homepage-main">
       <Navbar />
-        
+
       <div className="homepage-categories-wrap">
         <span
           className={`category-pill ${
@@ -128,17 +134,17 @@ const HomePage = () => {
           </span>
         ))}
       </div>
-        
-        <div className="homepage-search-wrap">
-            <input
-                type="text"
-                className="homepage-search-input"
-                placeholder="Hledat podle titulku, datumu, obsahu nebo autora..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-            />
-        </div>
-        
+
+      <div className="homepage-search-wrap">
+        <input
+          type="text"
+          className="homepage-search-input"
+          placeholder="Hledat podle titulku, datumu, obsahu nebo autora..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+      </div>
+
       <div className="articles-wrap">
         {filteredArticles.length === 0 ? (
           <p className="homepage-no-articles">Žádné články v této kategorii.</p>

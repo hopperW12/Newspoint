@@ -89,11 +89,8 @@
   border-radius: 999px;
 }
 
-.article-text {
-}
-
 .article-detail-link {
-  color: #006;
+  color: rgb(28, 83, 202);
   text-decoration: none;
 }
 

@@ -15,6 +15,7 @@ const AdminBoard = () => {
   useEffect(() => {
     if (!user) return;
 
+    // Getne vsechny articles a satne je + moje articles
     const fetchArticles = async () => {
       try {
         const res = await fetch(`/api/Article`, {
@@ -30,6 +31,7 @@ const AdminBoard = () => {
       }
     };
 
+    // Getne vsechny komentare
     const fetchComments = async () => {
       try {
         const res = await fetch(`/api/account/comment`, {
@@ -43,6 +45,7 @@ const AdminBoard = () => {
       }
     };
 
+    // Getne vsechny users
     const fetchUsers = async () => {
       try {
         const res = await fetch(`/api/admin/user`, {
@@ -63,6 +66,7 @@ const AdminBoard = () => {
     fetchUsers();
   }, [user, jwt]);
 
+  // Smazani articlu
   const handleDeleteArticle = async (id) => {
     if (!window.confirm("Opravdu chcete smazat tento článek?")) return;
 
@@ -73,11 +77,13 @@ const AdminBoard = () => {
       });
       if (!res.ok) throw new Error("Chyba při mazání článku");
       setArticles(articles.filter((a) => a.id !== id));
+      window.location.reload();
     } catch (err) {
       alert(err.message);
     }
   };
 
+  // Prepinani rolí
   const handleToggleRole = async (userId) => {
     try {
       // Najdi upravovaného uživatele
@@ -114,6 +120,7 @@ const AdminBoard = () => {
     }
   };
 
+  // Smazani uzivatele
   const handleDeleteUser = async (id) => {
     if (!window.confirm("Opravdu chcete smazat tohoto uživatele?")) return;
 
@@ -149,7 +156,7 @@ const AdminBoard = () => {
         </p>
       </div>
 
-      {/* ==== Admin sekce - správa uživatelů ==== */}
+      {/* Správa uživatelů */}
       <div className="admin-user-management-section">
         <h4 className="admin-user-management-title">Správa uživatelů</h4>
 

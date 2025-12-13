@@ -8,6 +8,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  // Login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -21,9 +22,11 @@ const Login = () => {
 
       if (!res.ok) throw new Error("Špatný email nebo heslo");
 
+      // Pockani na data a ulozeni do localStorage.
       const data = await res.json();
       localStorage.setItem("jwt", data.token);
 
+      // Presmerovani na homepage
       navigate("/");
       window.location.reload();
     } catch (err) {
@@ -31,6 +34,7 @@ const Login = () => {
     }
   };
 
+  // Pri erroru setnout timer na 5s a potom odstranit error
   useEffect(() => {
     if (error) {
       const timer = setTimeout(() => setError(""), 5000);
