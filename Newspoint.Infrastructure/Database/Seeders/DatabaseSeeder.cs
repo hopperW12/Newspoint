@@ -42,7 +42,8 @@ public class DatabaseSeeder
 
         await _context.SaveChangesAsync();
 
-        var articles = FakeEntityFactory.Article(users, categories).Generate(25);
+        var dbCategories = _context.Categories.ToList();
+        var articles = FakeEntityFactory.Article(users, dbCategories).Generate(25);
 
         await _context.Articles.AddRangeAsync(articles);
         await _context.SaveChangesAsync();
