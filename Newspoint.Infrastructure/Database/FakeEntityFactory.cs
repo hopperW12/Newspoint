@@ -25,8 +25,8 @@ public static class FakeEntityFactory
     public static Faker<Article> Article(ICollection<User> users, ICollection<Category> categories)
     {
         return new Faker<Article>()
-            .RuleFor(a => a.Title, f => f.Lorem.Sentence())
-            .RuleFor(a => a.Content, f => f.Lorem.Paragraphs(3))
+            .RuleFor(a => a.Title, f => f.Lorem.Sentence(4))
+            .RuleFor(a => a.Content, f => f.Lorem.Paragraphs(2, 5))
             .RuleFor(a => a.PublishedAt, f => f.Date.Past())
             .RuleFor(a => a.AuthorId, f => f.PickRandom(users).Id)
             .RuleFor(a => a.CategoryId, f => f.PickRandom(categories).Id);
@@ -35,7 +35,7 @@ public static class FakeEntityFactory
     public static Faker<Comment> Comment(ICollection<User> users, ICollection<Article> articles)
     {
         return new Faker<Comment>()
-            .RuleFor(c => c.Content, f => f.Lorem.Paragraphs(3))
+            .RuleFor(c => c.Content, f => f.Lorem.Sentence(25))
             .RuleFor(c => c.PublishedAt, f => f.Date.Past())
             .RuleFor(c => c.ArticleId, f => f.PickRandom(articles).Id)
             .RuleFor(c => c.AuthorId, f => f.PickRandom(users).Id);
