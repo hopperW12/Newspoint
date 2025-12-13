@@ -4,9 +4,10 @@ namespace Newspoint.Server.Services;
 
 public class ArticleImageService : IArticleImageService
 {
-    private readonly IWebHostEnvironment _environment;
     private const long MaxFileSize = 2 * 1024 * 1024; // 2MB
-    private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png", "image/webp"];
+    private static readonly string[] AllowedContentTypes = ["image/jpeg", "image/png"];
+    
+    private readonly IWebHostEnvironment _environment;
 
     public ArticleImageService(IWebHostEnvironment environment)
     {
@@ -30,6 +31,7 @@ public class ArticleImageService : IArticleImageService
             Directory.CreateDirectory(uploadsFolder);
         }
 
+        // Vytvoření unikátního názvu souboru se stejnou příponou.
         var extension = Path.GetExtension(fileName);
         var uniqueFileName = $"{Guid.NewGuid()}{extension}";
         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -40,6 +42,7 @@ public class ArticleImageService : IArticleImageService
             await content.CopyToAsync(fileStream);
         }
 
+        // Vrací relativní cestu použitelnou na frontendu.
         return $"/images/articles/{uniqueFileName}";
     }
 
@@ -48,6 +51,7 @@ public class ArticleImageService : IArticleImageService
         if (string.IsNullOrWhiteSpace(imagePath))
             return Task.CompletedTask;
 
+        // Převedení relativní URL cesty na fyzickou cestu k souboru.
         var relativePath = imagePath.TrimStart('/')
             .Replace("/", Path.DirectorySeparatorChar.ToString());
         var fullPath = Path.Combine(_environment.WebRootPath, relativePath);
