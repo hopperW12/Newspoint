@@ -79,10 +79,26 @@ const HomePage = () => {
     const content = (a.content || "").toLowerCase();
     const author = (a.author || "").toLowerCase();
 
+    let dateText = "";
+    if (a.publishedAt) {
+      dateText = new Date(a.publishedAt)
+        .toLocaleString("cs-CZ", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+        .split(". ")
+        .join(".")
+        .toLowerCase();
+    }
+
     return (
       title.includes(search) ||
       content.includes(search) ||
-      author.includes(search)
+      author.includes(search) ||
+      dateText.includes(search)
     );
   });
 
@@ -117,7 +133,7 @@ const HomePage = () => {
             <input
                 type="text"
                 className="homepage-search-input"
-                placeholder="Hledat podle titulku, obsahu nebo autora..."
+                placeholder="Hledat podle titulku, datumu, obsahu nebo autora..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
