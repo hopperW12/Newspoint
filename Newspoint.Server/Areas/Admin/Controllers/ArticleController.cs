@@ -35,6 +35,7 @@ public class ArticleController : ControllerBase
         {
             try
             {
+                // Uložení nahraného obrázku a získání cesty.
                 await using var stream = image.OpenReadStream();
                 article.ImagePath = await _articleImageService.SaveImage(
                     image.FileName,
@@ -57,6 +58,7 @@ public class ArticleController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateArticle([FromForm] ArticleUpdateDto articleDto, IFormFile? image, [FromForm] bool deleteImage = false)
     {
+        // Nejprve ověříme, že článek existuje.
         var existingResult = await _articleService.GetById(articleDto.Id);
         if (!existingResult.Success || existingResult.Data == null)
             return this.ToActionResult(existingResult);
@@ -67,6 +69,7 @@ public class ArticleController : ControllerBase
 
         if (deleteImage)
         {
+            // Smazání aktuálního obrázku, pokud je požadováno.
             await _articleImageService.DeleteImage(existingArticle.ImagePath);
             article.ImagePath = null;
         }
@@ -75,6 +78,7 @@ public class ArticleController : ControllerBase
         {
             try
             {
+                // Nahrazení stávajícího obrázku novým souborem.
                 await using var stream = image.OpenReadStream();
                 article.ImagePath = await _articleImageService.ReplaceImage(
                     existingArticle.ImagePath,
@@ -95,6 +99,7 @@ public class ArticleController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteArticle(int id)
     {
+        // Načtení článku kvůli případnému smazání obrázku.
         var existingResult = await _articleService.GetById(id);
         if (!existingResult.Success || existingResult.Data == null)
             return this.ToActionResult(existingResult);
@@ -105,6 +110,7 @@ public class ArticleController : ControllerBase
         if (!result.Success)
             return this.ToActionResult(result);
 
+        // Po úspěšném smazání článku smažeme i obrázek.
         await _articleImageService.DeleteImage(existingArticle.ImagePath);
 
         return this.ToActionResult(result);

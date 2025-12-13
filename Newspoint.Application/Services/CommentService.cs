@@ -36,7 +36,7 @@ public class CommentService : ICommentService
 
     public async Task<Result<Comment>> Add(Comment comment)
     {
-        // FluentValidation
+        // Validace obsahu komentáře.
         var validationResult = await _commentValidator.ValidateAsync(comment);
         if (!validationResult.IsValid)
         {
@@ -44,7 +44,7 @@ public class CommentService : ICommentService
             return Result<Comment>.Error(ResultErrorType.Validation, firstError);
         }
 
-        // Find article in DB
+        // Ověření, že komentovaný článek existuje.
         var article = await _articleRepository.GetById(comment.ArticleId);
         if (article == null)
             return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.ArticleNotFound);
@@ -52,7 +52,7 @@ public class CommentService : ICommentService
         comment.ArticleId = article.Id;
         comment.Article = article;
 
-        // Find author in DB
+        // Ověření, že autor komentáře existuje.
         var author = await _userRepository.GetById(comment.AuthorId);
         if (author == null)
             return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
@@ -60,10 +60,10 @@ public class CommentService : ICommentService
         comment.AuthorId = author.Id;
         comment.Author = author;
 
-        // Set published date
+        // Nastavení času publikace komentáře.
         comment.PublishedAt = DateTime.Now;
 
-        // Add comment to DB
+        // Uložení komentáře do databáze.
         var result = await _commentRepository.Add(comment);
         if (result == null)
             return Result<Comment>.Error(ResultErrorType.UnknownError, ServiceMessages.CommentError);
@@ -73,7 +73,7 @@ public class CommentService : ICommentService
 
     public async Task<Result<Comment>> Update(Comment commentDto)
     {
-        // FluentValidation
+        // Validace nového obsahu komentáře.
         var validationResult = await _commentValidator.ValidateAsync(commentDto);
         if (!validationResult.IsValid)
         {
@@ -81,14 +81,15 @@ public class CommentService : ICommentService
             return Result<Comment>.Error(ResultErrorType.Validation, firstError);
         }
 
-        // Find comment in DB
+        // Načtení komentáře z databáze podle Id.
         var commentDb = await _commentRepository.GetById(commentDto.Id);
         if (commentDb == null)
             return Result<Comment>.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
 
+        // Aktualizace pouze textu komentáře.
         commentDb.Content = commentDto.Content;
 
-        // Update comment in DB
+        // Uložení změn do databáze.
         var result = await _commentRepository.Update(commentDb);
         if (result == null)
             return Result<Comment>.Error(ResultErrorType.UnknownError, ServiceMessages.CommentError);
@@ -112,10 +113,12 @@ public class CommentService : ICommentService
 
     public async Task<Result> CanUserDelete(int userId, int commentId)
     {
+        // Ověření, že komentář existuje.
         var comment = await _commentRepository.GetById(commentId);
         if (comment == null)
             return Result.Error(ResultErrorType.NotFound, ServiceMessages.CommentNotFound);
 
+        // Kontrola, že uživatel je autor komentáře nebo admin.
         var user = await _userRepository.GetById(userId);
         if (user == null || !(user.Role == Role.Admin || user.Id == comment.AuthorId))
             return Result.Error(ResultErrorType.UnknownError, ServiceMessages.Error);

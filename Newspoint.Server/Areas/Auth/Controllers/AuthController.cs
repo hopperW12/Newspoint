@@ -36,10 +36,12 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] UserLoginDto userLoginDto)
     {
+        // Vyhledání uživatele podle e-mailu a kontrola hesla.
         var user = await _userService.GetByEmail(userLoginDto.Email);
         if (user == null || user.Password != PasswordHasher.HashPassword(userLoginDto.Password))
             return Unauthorized();
 
+        // Při úspěšném přihlášení vytvoříme JWT token.
         var token = CreateToken(user);
         return Ok(new { Token = token });
 
@@ -54,7 +56,7 @@ public class AuthController : ControllerBase
         if (!result.Success)
             return this.ToActionResult(result);
 
-        // Create token
+        // Po úspěšné registraci rovnou vracíme token.
         var token = CreateToken(newUser);
         return Ok(new { Token = token });
 
@@ -65,6 +67,7 @@ public class AuthController : ControllerBase
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_jwtSecret);
 
+        // Sestavení tokenu s identitou uživatele a rolí.
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity([

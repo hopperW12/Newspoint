@@ -18,7 +18,7 @@ public class DataDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(DataDbContext).Assembly);
 
-        // Init entities seeders
+        // Naplnění tabulek výchozími daty pomocí seeder tříd.
         modelBuilder.Entity<User>().HasData(new UserSeeder().GetEntities());
         modelBuilder.Entity<Category>().HasData(new CategorySeeder().GetEntities());
     }

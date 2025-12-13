@@ -27,6 +27,7 @@ public class CommentController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> AddComment([FromBody] CommentCreateDto commentDto)
     {
+        // Vytvoření nového komentáře.
         var comment = _mapper.Map<Comment>(commentDto);
         var result = await _commentService.Add(comment);
         return this.ToActionResult<Comment, CommentDto>(result, _mapper);
@@ -35,6 +36,7 @@ public class CommentController : ControllerBase
     [HttpPut]
     public async Task<IActionResult> UpdateComment([FromBody] CommentUpdateDto commentDto)
     {
+        // Úprava textu existujícího komentáře.
         var comment = _mapper.Map<Comment>(commentDto);
         var result = await _commentService.Update(comment);
         return this.ToActionResult<Comment, CommentDto>(result, _mapper);
@@ -43,6 +45,7 @@ public class CommentController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteComment(int id)
     {
+        // Smazání komentáře podle Id.
         var result = await _commentService.Delete(id);
         return this.ToActionResult(result);
     }
