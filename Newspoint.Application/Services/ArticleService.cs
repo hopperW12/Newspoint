@@ -69,6 +69,10 @@ public class ArticleService : IArticleService
         if (author == null)
             return Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
 
+        // Kontrola, že autor má oprávnění publikovat (nesmí být Reader).
+        if (author.Role == Role.Reader)
+            return Result<Article>.Error(ResultErrorType.Validation, ServiceMessages.Error);
+
         article.Author = author;
         article.PublishedAt = DateTime.Now;
 
