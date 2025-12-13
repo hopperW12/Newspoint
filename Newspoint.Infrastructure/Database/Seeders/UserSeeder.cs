@@ -12,8 +12,17 @@ public class UserSeeder : IEntitySeeder<User>
             FirstName = "admin",
             LastName = "admin",
             Email = "admin@newspoint.com",
-            Password = "c7ad44cbad762a5da0a452f9e854fdc1e0e7a52a38015f23f3eab1d80b931dd472634dfac71cd34ebc35d16ab7fb8a90c81f975113d6c7538dc69dd8de9077ec",
+            Password = "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
             Role = Role.Admin
+        },
+        new ()
+        {
+            Id = 2,
+            FirstName = "redaktor",
+            LastName = "redaktor",
+            Email = "redaktor@newspoint.com",
+            Password = "d437337e6abc848ac36eba2294ca57cb54c052d92ab7ad72071a7ab086761964",
+            Role = Role.Editor
         }
     };
 }
