@@ -70,10 +70,6 @@ public class ArticleService : IArticleService
         if (author == null)
             return Result<Article>.Error(ResultErrorType.NotFound, ServiceMessages.AuthorNotFound);
 
-        // Check author permission
-        if (author.Role == Role.Reader)
-            return Result<Article>.Error(ResultErrorType.Validation, ServiceMessages.AuthorNotFound);
-
         article.Author = author;
         article.PublishedAt = DateTime.Now;
 
@@ -132,7 +128,7 @@ public class ArticleService : IArticleService
         return _articleRepository.GetUserArticles(userId);
     }
 
-    public async Task<Result> CanUserDelete(int userId, int articleId)
+    public async Task<Result> CanUserEdit(int userId, int articleId)
     {
         var article = await _articleRepository.GetById(articleId);
         if (article == null)

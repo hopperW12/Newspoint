@@ -17,7 +17,7 @@ namespace Newspoint.Server.Areas.Auth.Controllers;
 [Route("api/[area]")]
 public class AuthController : ControllerBase
 {
-    private const int ExpiresTime = 1;
+    private const int ExpiresTime = 8;
 
     private readonly string _jwtSecret;
     private readonly IUserService _userService;

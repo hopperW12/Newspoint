@@ -53,7 +53,7 @@ public class ArticleController : ControllerBase
         if (email == null) return Unauthorized();
 
         var user = await _userService.GetByEmail(email);
-        if (user == null) return Unauthorized();
+        if (user == null || user.Role is Role.Reader) return Unauthorized();
 
         var article = _mapper.Map<Article>(accountArticleDto);
         article.AuthorId = user.Id;
@@ -84,6 +84,16 @@ public class ArticleController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateArticle([FromForm] AccountArticleUpdateDto articleDto, IFormFile? image, [FromForm] bool deleteImage = false)
     {
+        var email = User.FindFirstValue(ClaimTypes.Email);
+        if (email == null) return Unauthorized();
+
+        var user = await _userService.GetByEmail(email);
+        if (user == null || user.Role is Role.Reader) return Unauthorized();
+
+        var canEdit = await _articleService.CanUserEdit(user.Id, articleDto.Id);
+        if (!canEdit.Success)
+            return this.ToActionResult(canEdit);
+
         var existingResult = await _articleService.GetById(articleDto.Id);
         if (!existingResult.Success || existingResult.Data == null)
             return this.ToActionResult(existingResult);
@@ -126,9 +136,9 @@ public class ArticleController : ControllerBase
         if (email == null) return Unauthorized();
 
         var user = await _userService.GetByEmail(email);
-        if (user == null) return Unauthorized();
+        if (user == null || user.Role is Role.Reader) return Unauthorized();
 
-        var canDelete = await _articleService.CanUserDelete(user.Id, id);
+        var canDelete = await _articleService.CanUserEdit(user.Id, id);
         if (!canDelete.Success)
             return this.ToActionResult(canDelete);
 

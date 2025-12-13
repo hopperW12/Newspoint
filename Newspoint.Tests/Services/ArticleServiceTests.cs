@@ -363,7 +363,7 @@ public class ArticleServiceTests
             .ReturnsAsync((Article?)null);
 
         // Test
-        var result = await _service.CanUserDelete(5, 1);
+        var result = await _service.CanUserEdit(5, 1);
 
         Assert.False(result.Success);
         Assert.Equal(ResultErrorType.NotFound, result.ErrorType);
@@ -383,7 +383,7 @@ public class ArticleServiceTests
             .ReturnsAsync(user);
 
         // Test
-        var result = await _service.CanUserDelete(user.Id, article.Id);
+        var result = await _service.CanUserEdit(user.Id, article.Id);
 
         Assert.True(result.Success);
     }
@@ -402,7 +402,7 @@ public class ArticleServiceTests
             .ReturnsAsync(user);
 
         // Test
-        var result = await _service.CanUserDelete(user.Id, article.Id);
+        var result = await _service.CanUserEdit(user.Id, article.Id);
 
         Assert.True(result.Success);
     }
@@ -420,7 +420,7 @@ public class ArticleServiceTests
             .ReturnsAsync((User?)null);
 
         // Test
-        var result = await _service.CanUserDelete(5, article.Id);
+        var result = await _service.CanUserEdit(5, article.Id);
 
         Assert.False(result.Success);
         Assert.Equal(ResultErrorType.UnknownError, result.ErrorType);
