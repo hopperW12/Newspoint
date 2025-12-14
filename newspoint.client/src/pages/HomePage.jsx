@@ -50,7 +50,7 @@ const HomePage = () => {
       return;
     }
 
-    // all se vzpne kdyz jsou vybrane jine kategorie
+    // all se vypne kdyz jsou vybrane jine kategorie
     const withoutAll = selectedCategories.filter((c) => c !== "all");
 
     // odkliknuti kategorie

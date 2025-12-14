@@ -77,7 +77,7 @@ const EditArticlePage = () => {
       if (deleteImage) formData.append("deleteImage", true);
       formData.append("ImagePath", article.imagePath || "");
 
-      const res = await fetch(`/api/account/article/${id}`, {
+      const res = await fetch(`/api/account/article`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${jwt}`,
