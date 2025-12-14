@@ -2,6 +2,7 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newspoint.Application.Services;
 using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Account.DTOs;
@@ -70,7 +71,7 @@ public class ArticleController : ControllerBase
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return this.ToActionResult(Result.Error(ResultErrorType.UnknownError, ex.Message));
             }
         }
 
@@ -81,7 +82,7 @@ public class ArticleController : ControllerBase
         return this.ToActionResult<Article, ArticleDto>(result, _mapper);
     }
 
-    [HttpPut("{id:int}")]
+    [HttpPut]
     public async Task<IActionResult> UpdateArticle([FromForm] AccountArticleUpdateDto articleDto, IFormFile? image, [FromForm] bool deleteImage = false)
     {
         var email = User.FindFirstValue(ClaimTypes.Email);

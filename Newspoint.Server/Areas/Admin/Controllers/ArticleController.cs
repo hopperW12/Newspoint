@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newspoint.Application.Services;
 using Newspoint.Application.Services.Interfaces;
 using Newspoint.Domain.Entities;
 using Newspoint.Server.Areas.Admin.DTOs;
@@ -44,7 +45,7 @@ public class ArticleController : ControllerBase
             }
             catch (InvalidOperationException ex)
             {
-                return BadRequest(new { message = ex.Message });
+                return this.ToActionResult(Result.Error(ResultErrorType.UnknownError, ex.Message));
             }
         }
 
