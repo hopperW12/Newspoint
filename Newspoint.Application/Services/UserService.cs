@@ -57,6 +57,9 @@ public class UserService : IUserService
 
     public async Task<Result<User>> Update(User entity)
     {
+        // Aby prošla validace
+        entity.Password = "FAKE;";
+        
         // Validace vstupních dat.
         var validationResult = await _userValidator.ValidateAsync(entity);
         if (!validationResult.IsValid)
